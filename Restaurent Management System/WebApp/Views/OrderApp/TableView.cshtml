@@ -1,0 +1,198 @@
+@{
+    ViewData["Title"] = "Order App";
+}
+
+
+<div class="container-fluid p-3 px-5 col-12">
+
+    <div class="container-fluid">
+        <div class="row  d-flex align-items-center justify-content-between">
+            <div class="col-sm-8">
+                <a class="text-decoration-none text-blue fs-2 fw-bolder">Table View</a>
+            </div>
+            <div class="col-sm-4  d-flex justify-content-end">
+                <span><i class="fa-solid fa-circle mx-2 text-secondary" ></i>Available</span>
+                <span><i class="fa-regular fa-circle mx-2 text-success"></i>Selected</span>
+                <span><i class="fa-solid fa-circle mx-2 text-success"></i>Assigned</span>
+                <span><i class="fa-solid fa-circle mx-2 text-primary opacity-75"></i>Running</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div id="tableOrderAppContainer">
+                <div class=" my-3 sectionAccordion">
+                    <div class="accordion" id="accordionAtOrderAppTableView">
+                        <div class="accordion-item my-4">
+                            <h2 class="accordion-header ">
+                                <div class="d-flex justify-content-between align-items-center p-3"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true"
+                                    aria-controls="collapseOne">
+                                    <div class="d-flex text-blue fw-medium ">
+                                        <button class="accordion-button rounded-pill p-1" style="width: 28px;"
+                                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                            aria-expanded="true" aria-controls="collapseOne">
+                                        </button>
+                                        <span class="mx-2">Ground Floor</span>
+                                    </div>
+                                    <div class="d-flex align-items-center fs-6 ">
+                                        <span><i class="fa-solid fa-circle mx-2 text-secondary"></i>3</span>
+                                        <span><i class="fa-solid fa-circle mx-2 text-success"></i>1</span>
+                                        <span><i class="fa-solid fa-circle mx-2 text-primary opacity-75"></i>1</span>
+
+                                        <input type="button" class="btn border border-blue mx-2 text-blue"
+                                            value="+ Waiting Token" id="AddNewWaitingToken">
+                                    </div>
+                                </div>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionAtOrderAppTableView">
+                                <div class=" accordion-body d-flex flex-column">
+                                    <div class=" d-flex justify-content-start p-3">
+                                        <div class="card mx-2"
+                                            style="width: 15rem; background-color: rgba(69, 196, 255, 0.356);">
+                                            <div class="card-body row">
+                                                <div class="col-6 d-flex flex-column">
+                                                    <h5 class="card-title my-2">T1</h5>
+                                                    <i class="fa-solid fa-users my-2"></i>
+                                                    <span class="my-2">6</span>
+                                                </div>
+                                                <div class="col-6 d-flex flex-column align-items-center">
+                                                    <span class="my-2">$485.4598</span>
+                                                    <i class="fa-regular fa-clock my-2"></i>
+                                                    <span class="my-2">1 min 5 sec</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="card mx-2"
+                                            style="width: 15rem; background-color: rgba(128, 128, 128, 0.356);">
+                                            <div class="card-body row">
+                                                <div class="col-6 d-flex flex-column">
+                                                    <h5 class="card-title my-2">T2</h5>
+                                                    <i class="fa-solid fa-users my-2"></i>
+                                                    <span class="my-2">6</span>
+                                                </div>
+                                                <div class="col-6 d-flex flex-column align-items-center">
+                                                    <span class="my-2  invisible">0</span>
+                                                    <i class="fa-regular fa-clock my-2"></i>
+                                                    <span class="my-2">0 min</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end align-items-center m-3 mx-4">
+                                        <button class="btn updateBtn text-white" data-bs-toggle="modal"
+                                            data-bs-target="#assignTableModal">Assign</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item my-4">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Accordion Item #2
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse"
+                                data-bs-parent="#accordionAtOrderAppTableView">
+                                <div class="accordion-body">
+                                    <strong>HEllo from 2 </strong> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Accordion Item #3
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse"
+                                data-bs-parent="#accordionAtOrderAppTableView">
+                                <div class="accordion-body">
+                                     <strong>HEllo from 3 </strong> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Assign Table to Customer Modal*@
+<div class="modal modal-left-show fade" id="assignTableModal" tabindex="0" role="dialog" aria-labelledby="assignTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-blue">Waiting List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body row d-flex flex-column m-0 p-0">
+                <div class="col-12 ">
+                    <table class="w-100 table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th scope="col">id</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">No. of Person</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row"><input type="radio"></td>
+                                <td>#109</td>
+                                <td>Sarah</td>
+                                <td>5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 my-2">
+                    <h3 class="text-blue my-4">Customer Details</h3>
+                    <div class="form-floating m-4">
+                        <input type="email" class="form-control" id="AssignWaitigCustomerEmail
+                        " placeholder="Email">
+                        <label for="AssignWaitigCustomerEmail">Email* </label>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-floating m-4 ">
+                        <input type="email" class="form-control" id="AssignWaitigCustomerName" placeholder="Email">
+                        <label for="AssignWaitigCustomerName">Name* </label>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="form-floating m-4 ">
+                        <input type="email" class="form-control" id="AssignWaitigCustomerMobileNo" placeholder="Email">
+                        <label for="AssignWaitigCustomerMobileNo">Mobile Number* </label>
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="d-flex m-4">
+                        <div class="form-floating w-50 mx-1">
+                            <input type="number" class="form-control" id="AssignWaitigCustomerNoOfPerson"
+                                placeholder="Number Of Person">
+                            <label for="AssignWaitigCustomerNoOfPerson">Number Of Person* </label>
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="form-floating w-50 mx-1">
+                            <select class="form-select" id="AssignWaitigCustomerSection" placeholder=""
+                                aria-label="Floating label select example" asp-items="@ViewBag.CountryName">
+                            </select>
+                            <label for="AssignWaitigCustomerSection">Section*</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex m-4 p-1 align-item-center justify-content-end">
+                        <button type="button" class="btn updateBtn me-2" id="">Assign</button>
+                        <button type="button" class="btn cancelbtn me-2" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,175 @@
+@using PMSCore.ViewModel
+@using PMSWebApp.Extensions;
+@model PMSCore.ViewModel.UserProfileVM
+@{
+    ViewData["Title"] = "Profile Page";
+    int editorId = User.GetUserId();
+}
+ <link rel="stylesheet" href="~/css/ProfileSection.css" asp-append-version="true" /> 
+  <script src="~/js/Profile.js"></script>
+<div class="container p-4">
+    <h2>My Profile</h2>
+             <form asp-action="UpdateProfile" method="post" enctype="multipart/form-data" >
+             <input type="hidden" asp-for="editorId" value="@editorId" />
+    <div class="row profile-box mainContent position-relative">
+        <div class=" p-0 profile-box-header">
+            <div class="col-12 position-absolute Profilecover top-0 "></div>
+            <div class="col-12 d-flex justify-content-between align-items-center mt-4 px-4 ">
+                <div class="d-flex  justify-content-center align-items-center">
+                    <div class="position-relative p-2">
+                        <img class="bg-white ProfilePhoto"  src="@Url.Action("GetUserPhoto", "Profile", new { email = Model.EmailId })" height="100"
+                            width="100" class="border rounded-circle" alt="">
+                            <div class="camera-icon">
+                        <i class="bi bi-camera "  ></i>
+                            <input type="file" asp-for="@Model.Photo" onchange="displayFileNameWithAnimation(this)"  accept=".png" >
+                            </div>
+                        @* <img src="@Url.Content("~/images/camera.png")" class="position-absolute" alt=""> *@
+                    </div>
+
+                    <div class="d-flex flex-column mt-4">
+                        <span class="">@Model.FirstName @Model.LastName</span>
+                          <span>@Model.RoleName</span>
+                          <span id="uploadedFileName" class="text-muted"></span>
+                    </div>
+                </div>
+                <div class="pe-2 mt-4">
+                    <span>@Model.EmailId</span>
+                </div>
+            </div>
+        </div>
+       
+            <input type="hidden" asp-for="EmailId" value="@Model.EmailId" />
+            <input type="hidden" asp-for="RoleName" value="@Model.RoleName" />
+            <div class="profile-box-body">
+                <div class="row">
+                    <div class="col col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="FirstName" class="form-control" id="floatingInput"
+                                value="@Model.FirstName">
+                            <label for="floatingInput">First Name</label>
+                             <span class="text-danger" asp-validation-for="FirstName"></span>
+                        </div>
+                    </div>
+                    <div class="col col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="LastName" class="form-control" value="@Model.LastName"
+                                id="floatingInput">
+                            <label for="floatingInput">Last Name</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="UserName" class="form-control" value="@Model.UserName"
+                                id="floatingInput">
+                            <label for="floatingInput">User Name</label>
+                             <span class="text-danger" asp-validation-for="UserName"></span>
+                        </div>
+                    </div>
+                    <div class="col col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="PhoneNumber" class="form-control"
+                                value="@Model.PhoneNumber" id="floatingInput">
+                            <label for="floatingInput">Phone Number</label>
+                             <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-md-4">
+                        <div class="form-floating mb-3">
+                          <select id="CountryDropdown" asp-for="ContryId" class="form-select"
+                                asp-items="ViewBag.CountryList">
+                            <option value="@Model.ContryId">Select a Country</option>
+                        </select>
+
+                            <label for="CountryDropdown">Country</label>
+                             <span class="text-danger" asp-validation-for="ContryId"></span>
+                        </div>
+                    </div>
+
+                    <div class="col col-md-4">
+                    <div class="form-floating mb-3">
+                        <select id="StateDropdown" asp-for="StateId" class="form-select">
+                            <option value="@Model.StateId">Loading...</option> <!-- Placeholder -->
+                        </select>
+                        <label for="StateDropdown">State</label>
+                        <span class="text-danger" asp-validation-for="StateId"></span>
+                    </div>
+                </div>
+
+                <div class="col col-md-4">
+                    <div class="form-floating mb-3">
+                        <select id="CityDropdown" asp-for="CityId" class="form-select">
+                            <option value="@Model.CityId">Loading...</option> <!-- Placeholder -->
+                        </select>
+                        <label for="CityDropdown">City</label>
+                        <span class="text-danger" asp-validation-for="CityId"></span>
+                    </div>
+                </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col col-md-8">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="Address" class="form-control" value="@Model.Address"
+                                id="floatingInput">
+                            <label for="floatingInput">Address</label>
+                            
+                        </div>
+                    </div>
+                    <div class="col col-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" asp-for="ZipCode" class="form-control" value="@Model.ZipCode"
+                                id="floatingInput">
+                            <label for="floatingInput">ZIPCODE</label>
+                             <span class="text-danger" asp-validation-for="ZipCode"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-box-footer">
+                <div class="d-flex justify-content-end">
+                    <button class="btn updateBtn" type="submit">update</button>
+                    <button type="reset" class="btn cancelbtn">cancle</button>
+                </div>
+            </div>
+    </div>
+        </form>
+</div>
+
+@* 
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }
+
+    <script>    
+
+    function validateForm() {
+        
+        var zip = document.getElementById("Zipcode").value;
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            alert("Phone number must be 10 digits.");
+            return false;
+        }
+
+        if (!/^[0-9]{5,6}$/.test(zip)) {
+            alert("Zipcode must be 5 or 6 digits.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+} *@
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    
+</script>
+

@@ -1,0 +1,98 @@
+@using PMSCore.ViewModel
+@model (IEnumerable<User> users, PaginationDetails paginationDetails)
+
+@{
+    ViewData["Title"] = "User Page";
+
+}
+<script src="~/js/Users.js"></script>
+<div class="bg-light" id="mainContent">
+    <div id="usersPageHeader" class="row d-flex justify-content-between">
+        <div class="d-flex align-items-center col-12 col-md-3">
+            <span class="text-blue fw-bold fs-2">Users</span>
+        </div>
+        <div class="col-12 col-md-9 d-flex">
+            <div class="row col-12 d-flex align-items-center justify-content-end">
+                <input type="hidden" value="@Model.paginationDetails.totalRecords" id="totalRecordsForUserPage"
+                    name="totalRecords"/>
+                <div class="mt-2 col-12 col-sm-6">
+                    <input type="text" class="form-control" placeholder="Search" id="searchUser" name="searchQuery">
+                </div>
+                <a class="mt-2 col-12 col-sm-2 " asp-action="AddUser" asp-controller="User">
+                    <button type="button" class="addBtn rounded-1 border-0">+ Add User</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ---------------------- User List Table ---------------------- -->
+
+    <div class="mainContent my-4 ms-2 mr-5">
+        <div class="table-responsive ">
+            <div class="d-block d-md-none">
+                <div class="mb-3 d-flex flex-nowrap flex-column ">
+                    <!-- Sorting Dropdown -->
+                    <h3>Filters:</h3>
+                    <div class="row col-12 d-flex  justify-content-between ">
+                        <div class="d-flex flex-nowrap align-items-center col-sm-6 col-12">
+                            <label for="sortAccordion" class="form-label col-4 d-flex justify-content-end pe-2">Sort
+                                By:</label>
+                            <select id="sortAccordion" class="form-select">
+                                <option value="Name">Name</option>
+                                <option value="Role">Role</option>
+                            </select>
+                        </div>
+
+                        <!-- Ascending/Descending Toggle -->
+                        <div class="d-flex align-items-center col-sm-6 col-12 my-3 justify-content-end">
+                            <label class="form-label me-2 fw-bold">Sort Order:</label>
+                            <div class="btn-group toggle-switch" role="group" aria-label="Sort Order">
+                                <input type="radio" class="btn-check btn-checkForUserOrder" name="sortOrder" id="sortAsc" value="asc"
+                                    autocomplete="off" checked>
+                                <label class="btn btn-primary px-4 py-2" for="sortAsc">
+                                    <i class="bi bi-arrow-up"></i> Asc
+                                </label>
+
+                                <input type="radio" class="btn-check btn-checkForUserOrder" name="sortOrder" id="sortDesc" value="desc"
+                                    autocomplete="off">
+                                <label class="btn btn-primary px-4 py-2" for="sortDesc">
+                                    <i class="bi bi-arrow-down"></i> Desc
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="userListContainer">
+                <partial name="_Partial_UserGrid" model="Model.users" />
+                @* @await Html.Partial("_Partial_UserGrid", (users,paginationDetails)) *@
+            </div>
+        </div>
+        <div class="tableFooter">
+
+            <div class="footerContent text-center">
+                <!-- Pagination -->
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="mx-2">
+                        <span class="paginationText">Items Per Page:</span>
+                        <select class="form-select" id="UserPerPage">
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
+                    </div>
+
+                    <div class="paginationInfo mx-2">
+
+                        <span class="col-5 m-2 paginationtext d-none d-sm-inline" id="paginationInfoForUserPage"></span>
+                    </div>
+                    <button class="btn border" id="prevPageForUsersPage">
+                        &lt; </button>
+                    <button class="btn border" id="nextPageForUsersPage"> &gt; </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+@using PMSCore.ViewModel
+@model IEnumerable<TaxDetails>
+ 
+  <div class="table-responsive">
+            <table id="TaxesTable" class="table table-hover table-fixed">
+                <thead class="thead-dark">
+                    <tr>
+                        <th><span>Name</span></th>
+                        <th>Type</th>
+                        <th>IsEnabled</th>
+                        <th>Default</th>
+                        <th>Tax Value</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (TaxDetails tax in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @tax.TaxName
+                                    
+                                </td>
+                                <td>@tax.TaxType</td>
+                                <td>
+                                    <div class="form-check form-switch custom-check-input">
+                                        <input class="form-check-input" type="checkbox" @(tax.Isenabled ?
+                                            "checked" : " " ) disabled >
+                                </div>
+                            </td>
+                            <td>
+                                    <div class="form-check form-switch custom-check-input">
+                                        <input class="form-check-input" type="checkbox"  @(tax.Isdefault ?
+                                            "checked" : " " ) disabled >
+                                </div>
+                            </td>
+                                <td>@tax.TaxValue</td>
+                                <td class="text-center">
+                                    <a onclick="AssignValueForEditTax(@tax.TaxId,'@tax.TaxName','@tax.TaxType','@tax.Isenabled','@tax.Isdefault',@tax.TaxValue)">
+                                        <img src="@Url.Content("~/images/edit.png")" class="ms-4" width="15">
+                                    </a>
+                                    <a onclick="AssignValueForDeleteTax(@tax.TaxId)">
+                                        <img src="@Url.Content("~/images/delete.png")" data-bs-toggle="modal" data-bs-target="#DeleteModalForTax"
+                                            class="ms-4" width="15">
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No results found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>

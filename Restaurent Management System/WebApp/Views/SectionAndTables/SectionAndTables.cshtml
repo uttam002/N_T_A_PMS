@@ -1,0 +1,228 @@
+@using PMSCore.ViewModel
+@using PMSWebApp.Extensions;
+@model AreaDetails
+
+@{
+    ViewData["Title"] = "Area Page";
+    int editorId = User.GetUserId();
+    TableDetails newTable = new TableDetails();    
+}
+
+<div class="bg-light mb-3" id="mainContentOfAreaDetails">
+
+    <div class="col">
+        <div class="h2 mt-3 ms-3 mainHeading">Sections/Tables</div>
+    </div>
+    <div class="mainContent ms-4 me-5">
+
+        <div class="row">
+            <div class="col-auto d-flex flex-column background-box-shade">
+                <!-- ------------------- Heading of Section Section --------------------------------- -->
+
+                <div class="d-flex align-items-center justify-content-start mt-2 ms-3 mb-5" style="gap: 100px;">
+                    <span class="fs-4 logo-name">Sections</span>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#addSectionModal"><img
+                            src="~/images/icons/plus-square.svg" width="30px" height="30px"></a>
+                </div>
+                <!-- -------------------------- Section List --------------------------------------- -->
+                <partial name="_partial_SectionListGrid" model="Model.sections" />
+
+            </div>
+
+            <!-- ---------------------------- Table Section ---------------------------------- -->
+            <div class="col Table-desc">
+                <!-- ----------------- header of Table section with buttons ------------------------ -->
+                <div class="row fs-4 ms-2 mt-2">Tables</div>
+                <div class="row d-flex justify-content-end me-2 mb-2">
+                    <div class="col-auto  mt-3 ms-3">
+                        <input type="text" id="searchforTablesList" class="form-control" placeholder="Search tables...">
+                    </div>
+                    <div class="col-auto mt-3">
+                        <button class="btn border-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"><img
+                                src="~/images/icons/trash3-fill.svg" width="30px" height="30px"></button>
+                    </div>
+                    <div class="col-auto mt-3"><button data-bs-toggle="modal" data-bs-target="#addTableModal"
+                            class="btn btn-primary" style="height: 45px;">+
+                            New Table</button>
+                    </div>
+                </div>
+                <!-- ------------------------------ Table List ---------------------------------------- -->
+
+                <div id="AreaTables">
+                    <partial name="_partial_TablesListGrid" model="Model.tables" />
+                </div>
+                <div class="d-flex align-item-center justify-content-end ">
+                    <div class="col-4 my-2 mx-1 d-flex">
+                        <!-- Order per page dropdown -->
+                        <select class="form-select" id="TablePerPage">
+                            <option value="2" selected>2</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                        </select>
+                        <!-- Pagination info -->
+                        <span class="col-5 m-2 paginationtext d-none d-sm-inline" id="paginationInfoForAreaPage"></span>
+                        <button class="btn border" id="prevPageforTablesList">
+                            &lt; </button>
+                        <button class="btn border" id="nextPageforTablesList"> &gt; </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ---------------------------------------- Add Section Modal --------------------------------------------->
+<div class="modal fade" id="addSectionModal" tabindex="-1" aria-labelledby="addSectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-3 d-flex flex-nowrap justify-content-between">
+                    <h5 class="modal-title mt-1" id="addSectionModalLabel">Add Section</h5>
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddSectionForm" asp-controller="SectionAndTables" asp-action="AddSection">
+                    <div class="mb-3">
+                    <input type="hidden" id="editorIdForAddSection" name="editorId" value="@editorId" />
+                        <label for="sectionName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="sectionName" name="SectionName">
+                    </div>
+                    <div class="mb-5">
+                        <label for="sectionDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="sectionDescription" name="Description"></textarea>
+                    </div>
+                </form>
+                <div class="d-flex justify-content-lg-end">
+
+                    <button type="submit" class="updateBtn btn w-25 " form="AddSectionForm">Save</button>
+                    <button type="reset" class="btn ms-3 cancelbtn w-25">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------------- Add Table Modal  ----------------------------------->
+<div class="modal fade" id="addTableModal" tabindex="-1" aria-labelledby="addTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-2 d-flex flex-nowrap justify-content-between">
+                    <h5 class="modal-title mt-1" id="addSectionModalLabel">Add Table</h5>
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddTableForm" method="post" asp-controller="SectionAndTables" asp-action="AddNewTable">
+                    <div class="mb-3" id="AddTableForm">
+                    <input type="hidden" id="editorIdForAddTable" name="editorId" value="@editorId" />
+                        <div class="row m-1">
+                            <div class="col-6 my-2 px-1 form-floating">
+                                <input type="text" class="form-control" id="tableName" placeholder="Name"
+                                    asp-for="@newTable.TableName">
+                                <label for="tableName" class="form-label">Name*</label>
+                            </div>
+                            <div class="col-6 my-2 px-1 form-floating">
+                                <select asp-for="@newTable.SectionId" class="form-select" id="sectionIdForNewTable">
+                                    <option value="">Select Table Section</option>
+                                    @foreach (SectionDetails s in Model.sections)
+                                    {
+                                        // Because of "section" is a in-built keyword so i use simply "s" to iterate loop
+                                        <option value="@s.SectionId">@s.SectionName</option>
+                                    }
+                                </select>
+                                <label for="sectionIdForNewTable">Section*</label>
+                            </div>
+                        </div>
+                        <div class="row m-1">
+                            <div class="col-6 my-2 px-1">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" placeholder="Capacity" id="tableCapacity"
+                                        asp-for="@newTable.Capacity">
+                                    <label for="tableCapacity" class="form-label">Capacity*</label>
+                                </div>
+                            </div>
+                            <div class="col-6 my-2 px-1 ">
+                                <div class="form-floating">
+                                    <select asp-for="@newTable.Status" class="form-select" placeholder="Capacity"
+                                        id="tableStatus">
+                                        <option value="">Select Table Status</option>
+                                        <option value="Available">Available</option>
+                                        <option value="Occupied">Occupied</option>
+                                        <option value="Booked">Booked</option>
+                                    </select>
+                                    <label for="tableStatus">Status*</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+                <div class="d-flex justify-content-lg-end">
+
+                    <button type="submit" class="updateBtn btn w-25 " id="saveNewTableBtn"
+                        form="AddTableForm">Save</button>
+                    <button type="reset" class="btn ms-3 cancelbtn w-25" form="AddTableForm">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-----------------------------------------Edit Table Modal ----------------------------------------->
+
+<div class="modal fade" id="editTableModal" tabindex="-1" aria-labelledby="editTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-2 d-flex flex-nowrap justify-content-between">
+                    <h5 class="modal-title mt-1" id="editTableModalLabel">Edit Table</h5>
+                    <input type="hidden" id="tableIdForUpdate" name="tableId">
+                    <input type="hidden" id="editorIdForEditTable" name="editorId" value="@editorId" />
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+               
+                    <div class="row m-1">
+                        <div class="col-6 my-2 px-1 form-floating">
+                            <input type="text" class="form-control" id="EditTableName" placeholder="Name" asp-for="@newTable.TableName">
+                            <label for="EditTableName" class="form-label">Name*</label>
+                        </div>
+                        <div class="col-6 my-2 px-1 form-floating">
+                            <select asp-for="@newTable.SectionId" class="form-select" id="sectionIdForUpdateTable">
+                                <option value="">Select Table Section</option>
+                                @foreach (SectionDetails s in Model.sections)
+                                {
+                                    <option value="@s.SectionId">@s.SectionName</option>
+                                }
+                            </select>
+                            <label for="sectionIdForUpdateTable">Section*</label>
+                        </div>
+                    </div>
+                    <div class="row m-1">
+                        <div class="col-6 my-2 px-1">
+                            <div class="form-floating">
+                                <input type="number" class="form-control" placeholder="Capacity" id="EditTableCapacity" asp-for="@newTable.Capacity">
+                                <label for="EditTableCapacity" class="form-label">Capacity*</label>
+                            </div>
+                        </div>
+                        <div class="col-6 my-2 px-1">
+                            <div class="form-floating">
+                                <select asp-for="@newTable.Status" class="form-select" id="tableStatusForUpdateTable">
+                                    <option value="">Select Table Status</option>
+                                    <option value="Available">Available</option>
+                                    <option value="Occupied" disabled>Occupied</option>
+                                    <option value="Booked" disabled>Booked</option>
+                                </select>
+                                <label for="tableStatusForUpdateTable">Status*</label>
+                            </div>
+                        </div>
+                    </div>
+               
+                <div class="d-flex justify-content-lg-end">
+                    <button type="submit" class="updateBtn btn w-25" id="updateTableBtn">Save</button>
+                    <button type="reset" class="btn ms-3 cancelbtn w-25" form="updateTableForm">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/Area.js"></script>

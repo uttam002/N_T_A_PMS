@@ -1,0 +1,150 @@
+@using PMSCore.ViewModel
+@using PMSWebApp.Extensions;
+@{
+    int editorId = User.GetUserId();
+}
+<div class="row overflow-auto section-fixed" >
+    <ul class="nav flex-column" id="categoryList" style="gap: 13px;">
+        @foreach (var category in Model)
+        {
+            <li class="nav-link d-flex category-item" id="category-@category.id" data-category-id="@category.id">
+                <div class="d-flex align-items-center">
+                    <a class="d-flex flex-nowrap text-decoration-none category-link"
+                        onclick="getItemsbyCategoryId(@category.id);">
+                        <img src="~/images/icons/dots-6-vertical.svg" height="30px">
+                        <div class="text-wrap text-black ms-1 fw-bold">
+                            @category.categoryName
+                        </div>
+                    </a>
+                </div>
+                <div class="showBtns" id="categoryBtns-@category.id">
+                    <a data-bs-toggle="modal" data-bs-target="#EditCategoryModal"
+                        onclick="FillFormForEditCategory(@category.id, '@category.categoryName', '@category.description');">
+                        <img src="~/images/icons/pen.svg" class="ms-auto">
+                    </a>
+                    <a data-bs-toggle="modal" data-bs-target="#deleteCategoryModal"
+                        onclick="AssignValueForCategory(@category.id); highlightCategory(@category.id);"
+                        class="border-0 sweetalert">
+                        <img src="~/images/icons/trash3-fill.svg" alt="">
+                    </a>
+                </div>
+
+            </li>
+        }
+    </ul>
+</div>
+
+
+<!------------------------------ Add Category Modal --------------------->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-3 d-flex flex-nowrap justify-content-between">
+                    <h5 class="modal-title mt-1" id="addCategoryModalLabel">Add Category</h5>
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="AddCategoryForm">
+                    <input type="hidden" id="editorIdForAddCategory" name="editorId" value="@editorId">
+                    <div class="mb-3">
+                        <label for="categoryNameForAddCategory" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="categoryNameForAddCategory" name="CategoryName">
+                        <span class="text-danger d-none" id="validationTextForCategoryNameForAddCategory"></span>
+                    </div>
+                    <div class="mb-5">
+                        <label for="categoryDescriptionForAddCategory" class="form-label">Description</label>
+                        <textarea class="form-control" id="categoryDescriptionForAddCategory"
+                            name="Description"></textarea>
+                        <span class="text-danger d-none" id="validationTextForCategoryDescriptionForAddCategory"></span>
+                    </div>
+                </form>
+                <div class="d-flex justify-content-lg-end">
+
+                    <button type="button" class="updateBtn btn w-25" id="addCategoryBtn"
+                        form="AddCategoryForm">Save</button>
+                    <button type="reset" class="btn ms-3 cancelbtn w-25">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- --------------------------- Edit Category Modal  ------------------------->
+<div class="modal fade" id="EditCategoryModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="EditCategoryForm">
+                    <input type="hidden" id="categoryIdForEditCategory" name="categoryId">
+                    <input type="hidden" id="editorIdForEditCategory" name="editorId" value="@editorId">
+                    <div class="form-floating mb-3">
+                        <input type="text" id="categoryNameForEditCategory" name="CategoryName" class="form-control"
+                            required />
+                        <label for="EditCategoryName">Name</label>
+                        <span class="text-danger d-none" id="validationTextForCategoryNameForEditCategory"></span>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea id="categoryDescriptionForEditCategory" name="Description"
+                            class="form-control"></textarea>
+                        <label class="form-label" for="editCategoryDescription">Description</label>
+                    </div>
+                    <div class="m-2 me-3 d-flex flex-nowrap justify-content-end">
+                        <button type="button" class="updateBtn btn w-25" id="editCategoryBtn"
+                            form="EditCategoryForm">Save</button>
+                        <button type="button" onclick="clearEditCategoryForm();" class="btn ms-3 cancelbtn w-25">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -------------------------- Delete category Modal ------------------------- -->
+<div class="modal fade " id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-body px-3 py-5 d-flex flex-column justify-content-center align-items-center">
+                <img src="~/images/pngegg.png" class="mb-3" width="50" alt="Warning">
+                <span>Are you sure you want to Delete this Category?</span>
+
+                <form id="DeleteCategoryForm" class="d-flex col-12 mt-4 container flex-nowrap justify-content-center">
+                    <input type="number" id="categoryIdForDelete" name="categoryId" hidden>
+                    <input type="hidden" id="editorIdForDeleteCategory" name="editorId" value="@editorId" hidden>
+                    <button type="button" class="updateBtn btn w-25" id="deleteCategoryBtn" for="DeleteCategoryForm">Yes</button>
+                    <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">No</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* 
+<script>
+    function AssignValueForCategory(id) {
+        console.log("category id: " + id);
+        document.getElementById("categoryIdForDelete").value = id;
+    }
+
+    function FillFormForEditCategory(id, name, desc) {
+        console.log("category id: " + id);
+        document.getElementById("categoryIdForEdit").value = id;
+        document.getElementById("EditCategoryName").value = name;
+        document.getElementById("EditCategoryDescription").value = desc;
+    }
+
+    function highlightCategory(id) {
+        // Remove highlight from all categories
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.classList.remove('active-category');
+        });
+
+        // Add highlight to the selected category
+        document.getElementById(`category-${id}`).classList.add('active-category');
+    }
+</script> *@

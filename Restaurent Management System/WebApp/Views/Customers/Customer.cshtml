@@ -1,0 +1,120 @@
+@using PMSCore.ViewModel
+@using PMSWebApp.Extensions
+@model (IEnumerable<CustomerDetails> customers, PaginationDetails paginationDetails)
+
+@{
+    ViewData["Title"] = "Customers";
+    List<SelectListItem> timePeriodList = Model.paginationDetails.DateRange.ToSelectList();
+}
+<script src="~/js/Customer.js"></script>
+
+<div class="px-4 py-2" id="customerView">
+    <div class="row px-3">
+        <div class="col-12 container">
+            <form method="GET" asp-action="ExportData" class="col-12" asp-controller="Customers" id="exportDataForm">
+                <input type="hidden" value="@Model.paginationDetails.totalRecords" id="totalRecordsForCustomerPage"
+                    name="totalRecords" />
+                <input type="hidden" value="@Model.paginationDetails.FromDate" name="FromDate" id="fromDateForCustomerPageHiddenValue" />
+                <input type="hidden" value="@Model.paginationDetails.ToDate" name="toDate" id="toDateForCustomerPageHiddenValue"/>
+                <div class="col-12 d-flex flex-column flex-md-row justify-content-between px-0 p-2">
+                    <h2 class="fw-bold mainHeading">Customers</h2>
+                    <div
+                        class="col-8 d-flex flex-column flex-md-row justify-content-end align-items-center mt-3 mt-md-0">
+                        <div class="d-flex align-items-center position-relative mb-2 mb-md-0 me-md-2 w-100 w-md-auto">
+                            <!-- Search input -->
+                            <input type="text" class="form-control" id="SearchCustomer" name="customerSearch"
+                                placeholder="Search">
+                        </div>
+                        <div class="d-flex align-items-center position-relative mb-2 mb-md-0 me-md-2 w-100 w-md-auto">
+                            <select id="dateRangeForCustomerPage" name="dateRange" class="form-select">
+                                @foreach (SelectListItem timePeriod in timePeriodList)
+                                {
+                                    if (timePeriod.Value == Model.paginationDetails.DateRange.ToString())
+                                    {
+
+                                        <option value="@timePeriod.Value" selected>@timePeriod.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@timePeriod.Value">@timePeriod.Text</option>
+                                    }
+                                }
+                                <option value="CustomRange">Custom Range</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" form="exportDataForm" class=" col-2 btn btn-primary bcustomer ms-md-2">
+                            <a class="text-decoration-none text-white">
+                                <i class="bi bi-send-arrow-down p-1"></i>Export
+                            </a>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="d-flex flex-column col-12 p-0 bg-white d-flex justify-content-center bg-white shadow p-4">
+
+
+            <div class="container-fluid my-4 px-3 row p-0">
+                <!-- User table container -->
+                <div class="col-12 table-responsive px-0" id="customerList">
+                    @* <partial name=_partial_CustomerTableGrid" model="Model.customers" /> *@
+                    <partial name="_partial_CustomerTableGrid" model="Model.customers" />
+                </div>
+            </div>
+
+
+            <div class="d-flex align-item-center justify-content-end ">
+                <div class="col-4 my-2 mx-1 d-flex">
+                    <!-- Customer per page dropdown -->
+                    <select class="form-select" id="CustomerPerPage">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                    <!-- Pagination info -->
+                    <span class="col-5 m-2 paginationtext d-none d-sm-inline" id="paginationInfoForCustomerPage"></span>
+                    <button class="btn border" id="prevPageForCustomerPage">
+                        &lt; </button>
+                    <button class="btn border" id="nextPageForCustomerPage"> &gt; </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- -------------------------- Custom dateRange Range Modal   ------------------------- -->
+
+<div class="modal fade" id="customDateRangeModal" tabindex="-1" aria-labelledby="customDateRangeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-3 d-flex flex-nowrap justify-content-between">
+                    <h5 class="modal-title mt-1" id="customDateRangeModalLabel">Select Date Range</h5>
+                    <button type="button" class="btn-close mt-1" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 px-1 pb-3">
+                        <label for="fromDateForCustomerPage" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="fromDateForCustomerPage" name="fromDate">
+                    </div>
+                    <div class="col-6 px-1 pb-3">
+                        <label for="toDateForCustomerPage" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="toDateForCustomerPage" name="toDate">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-lg-end">
+
+                    <button type="submit" class="updateBtn btn w-25 " id="searchDateRangeForCustomerPage">Save</button>
+                    <button type="reset" class="btn ms-3 cancelbtn w-25"
+                        id="clearDateRangeForCustomerPage">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

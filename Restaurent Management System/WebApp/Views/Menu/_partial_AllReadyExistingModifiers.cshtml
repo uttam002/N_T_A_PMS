@@ -1,0 +1,59 @@
+@using PMSCore.ViewModel
+@model IEnumerable<ModifierDetails>
+@{
+    ViewData["Title"] = "Modifiers";
+    PaginationDetails paginationDetails = ViewBag.paginationDetails as PaginationDetails;
+
+}
+
+
+<!-- Hidden element to store pagination details -->
+<input type="hidden" id="paginationDetailsForExistingModifiers" data-page-size="@paginationDetails.PageSize"
+    data-page-number="@paginationDetails.PageNumber" data-sort-column="@paginationDetails.SortColumn"
+    data-sort-order="@paginationDetails.SortOrder" data-search-query="@paginationDetails.SearchQuery"
+    data-from-date="@paginationDetails.FromDate" data-to-date="@paginationDetails.ToDate"
+    data-total-records="@paginationDetails.totalRecords" />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" class="text-center">
+                <input type="checkbox" id="AllModifiersSelect" class="mx-2 ">
+                <label for="AllModifiersSelect"></label>
+            </th>
+            <th scope="col" class="text-center">Name</th>
+            <th scope="col" class="text-center">Unit</th>
+            <th scope="col" class="text-center">Rate</th>
+            <th scope="col" class="text-center">Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            @foreach (var modifier in Model)
+            {
+                <tr>
+                    <td class="text-center">
+                        <input type="checkbox" class="modifierCheckbox mx-2 modifierRowCheckBox" data-modifierId="@modifier.id"
+                            data-modifierName="@modifier.modifierName">
+                    </td>
+                    <td class="text-center">@modifier.modifierName</td>
+                    <td class="text-center">@modifier.unitType</td>
+                    <td class="text-center">@modifier.unitPrice</td>
+                    <td class="text-center">@modifier.quantity</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">No results found</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<script>
+
+</script>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Pizzashop</title>
+    <link rel="stylesheet" href="~/css/loginLayout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+</head>
+
+<body>
+    <div class="container-fluid p-0 screenContainer">
+        <div class="row flex-nowrap">
+            <div class="col col-md-6 d-none d-md-block p-0" id="imageSection">
+                <img src="@Url.Content("~/images/dominos_background.jpg")" alt="" srcset="">
+            </div>
+            <div class="col col-md-6" id="loginSection">
+                <div class="package">
+                    <!-- ------------------------ Company logo and name ------------------------ -->
+                    <div class="row" id="CompanyLogo">
+                        <img src="@Url.Content("~/images/logos/pizzashop_logo.png")" alt="pizzashop_logo"
+                            class="col p-1" width="70" height="70">
+                        <h4 class="col mt-3 p-0 d-none d-md-inline">PIZZASHOP</h4>
+                    </div>
+                    @RenderBody()
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container (Global) -->
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+            <div id="globalToast" class="toast align-items-center text-white border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="toastMessage">
+                        <!-- Dynamic Message Here -->
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+<script>
+    var toastMessage = '@(TempData["ToastMessage"] ?? "")';
+    var toastStatus = '@(TempData["ToastStatus"] ?? "")';
+</script>
+
+</html>

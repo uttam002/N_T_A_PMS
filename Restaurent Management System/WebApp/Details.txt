@@ -1,0 +1,31 @@
+// "ConnectionStrings": {
+//     "PizzashopDbConection": "Server=localhost;Database=PizzaShop;Trusted_Connection=false; MultipleActiveResultSets=true; Encrypt= false; user id =postgres; password=Tatva@123;"
+//   },
+//   "EmailSettings": {
+//     "SmtpServer": "mail.etatvasoft.com", 
+//     "SmtpPort": 587, 
+//     "SenderEmail": "test.dotnet@etatvasoft.com", 
+//     "SenderPassword": "P}N^{z-]7Ilp",
+//     "Encryption" : "STARTTLS"
+//   },
+//   "JwtConfig": {
+//     "Key": "CIProject98765ANGENT12345678910@CIProject",
+//     "Duration": "2"
+//   },
+
+
+
+
+
+        [ForeignKey("UserId")]
+    [InverseProperty("Userdetail")]
+    public virtual Userauthentication User { get; set; } = null!;
+
+
+    
+    [InverseProperty("User")]
+    public virtual Userdetail? Userdetail { get; set; }
+
+    dotnet ef dbcontext scaffold "Host=localhost;Database=Pizzashop;Username=postgres;Password=Tatva@123"
+     Npgsql.EntityFrameworkCore.PostgreSQL -c AppDbContext --context-dir . --output-dir ../Core/Entities
+      --force --data-annotations 

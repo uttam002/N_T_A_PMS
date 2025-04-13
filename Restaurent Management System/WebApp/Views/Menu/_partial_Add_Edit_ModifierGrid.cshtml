@@ -1,0 +1,89 @@
+@using PMSCore.ViewModel;
+@model IEnumerable<ModifierGropDetails>
+
+@{
+    AddModifier newModifier = new AddModifier();
+}
+
+
+
+<div class="modal fade" id="AddModifierModal" tabindex="-1" aria-labelledby="AddModifierModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <form method="post" asp-controller="Menu" asp-action="AddModifier">
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between m-3">
+                        <h5 class="modal-title">Add Menu Modifier</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="form-floating">
+
+                                    <select asp-for="@newModifier.ModifierGroupId" class=" form-select"
+                                        id="AddCategory">
+                                        @foreach (var modifierGroup in Model)
+                                        {
+                                            <option value="@modifierGroup.id">@modifierGroup.modifierGroupName</option>
+                                        }
+                                    </select>
+                                    <label for="AddCategory">Category*</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" asp-for="@newModifier.modifierName" class="form-control"
+                                        id="NewItemName" placeholder="">
+                                    <label for="NewItemName">Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" asp-for="@newModifier.UnitPrice" class="form-control"
+                                        id="EditRate" placeholder="">
+                                    <label for="EditRate">Rate*</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" asp-for="@newModifier.Quantity" class="form-control"
+                                        id="EditItemQuantity">
+                                    <label for="EditItemQuantity">Quantity*</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="@newModifier.UnitType" class="form-select" id="UpdateUnit">
+                                        <option value="pcs">Pieces</option>
+                                        <option value="kg">Kilo Gram</option>
+                                        <option value="liters">Liters</option>
+                                        <option value="units">Units</option>
+                                    </select>
+                                    <label for="UpdateUnit">Unit*</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-floating mb-3">
+                                    <textarea id="description" class="form-control h-100" rows="3"
+                                        placeholder=""></textarea>
+                                    <label for="description">Description</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-11 m-0 p-0 my-2 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary mx-3">Save</button>
+                            <button type="button" class="btn btn-primary bg-white text-primary"
+                                data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

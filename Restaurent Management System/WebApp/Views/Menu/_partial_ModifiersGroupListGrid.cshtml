@@ -1,0 +1,145 @@
+@using PMSCore.ViewModel
+@using PMSWebApp.Extensions;
+@model IEnumerable<ModifierGropDetails>
+
+@{
+    int editorId = User.GetUserId();
+}
+
+
+<div class="row overflow-auto" style="height: 400px;">
+    <input type="hidden" id="editorIdAt" value="@editorId" />
+    <ul class="nav flex-column" id="modifierGroupList" style="gap: 13px;">
+        @if (Model.Any())
+        {
+            @foreach (var modifierGroup in Model)
+            {
+                <li class="nav-link d-flex modifier-group" id="modifierGroup-@modifierGroup.id" data-group-id="@modifierGroup.id">
+                    <div class="d-flex align-items-center">
+                        <a class="d-flex flex-nowrap text-decoration-none category-link"
+                           onclick="getModifiersByGroupId(@modifierGroup.id);">
+                            <img src="~/images/icons/dots-6-vertical.svg" height="30px">
+                            <div style="width: 130px;" class="text-wrap text-black ms-1 fw-bold">
+                                @modifierGroup.modifierGroupName
+                            </div>
+                        </a>
+                    </div>
+                    <div class="showBtns" id="modifierGroupBtns-@modifierGroup.id">
+                        <a data-bs-toggle="modal" data-bs-target="#editModifierGroupModal"
+                           onclick="FillFormForEditModifierGroup(@modifierGroup.id, '@modifierGroup.modifierGroupName','@modifierGroup.description'); highlightModifiers(@modifierGroup.id);">
+                            <img src="~/images/icons/pen.svg" class="ms-auto">
+                        </a>
+                        <a data-bs-toggle="modal" data-bs-target="#deleteModifierGroupModal"
+                           onclick="AssignValueForDeleteModifierGroup(@modifierGroup.id); highlightModifiers(@modifierGroup.id);"
+                           class="border-0 sweetalert">
+                            <img src="~/images/icons/trash3-fill.svg" alt="">
+                        </a>
+                    </div>
+                </li>
+            }
+        }
+        else
+        {
+            <li class="text-center text-muted">No results found</li>
+        }
+
+    </ul>
+</div>
+
+
+<!-------------------------------------- Add Modifier Group Modal ------------------------------>
+<div class="modal fade" id="addModifierGroupModal" tabindex="-1" aria-labelledby="addModifierGroupModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModifierGroupModalLabel">Add Modifier Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="AddFormForModifierGroup">
+                <div class="modal-body">
+                    <div>
+                        <label for="addModifierGroupName">Modifier Group Name</label>
+                        <input type="text" class="form-control mb-2" id="addModifierGroupName"
+                            aria-describedby="textHelp" placeholder="Name" />
+                       <span class="text-danger d-none" id="validationTextForGroupNameForAddGroup"></span>
+                    </div>
+                    <label for="addModifierGroupDescription">Description</label>
+                    <textarea class="form-control" id="addModifierGroupDescription" rows="3"></textarea>
+                    <div class="mb-2">
+                        <a class="text-primary text-decoration-none existingModiferModalBtn" data-bs-toggle="modal">+ Add Existing Modifer</a>
+                    </div>
+                    <input type="hidden" id="modifiersForAddNewGroup" />
+                    <div class="modifierBadges" id="badgesForNewGroup"></div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveModifierGroupBtn" onclick="saveModifierGroup()"
+                        class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------- Edit Modifier Group Modal ------------------------------>
+<div class="modal fade" id="editModifierGroupModal" tabindex="-1" aria-labelledby="editModifierGroupModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModifierGroupModalLabel">Update Modifier Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="EditFormForModifierGroup">
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="editModifierGroupId" />
+                        <label for="editModifierGroupName">Modifier Group Name</label>
+                        <input type="text" class="form-control mb-2" id="editModifierGroupName"
+                            aria-describedby="textHelp" placeholder="Name" />
+                        @* <span asp-validation-for="" class="text-danger"></span> *@
+                    </div>
+                    <label for="editModifierGroupDescription">Description</label>
+                    <textarea class="form-control" id="editModifierGroupDescription" rows="3"></textarea>
+                    @* <span asp-validation-for="" class="text-danger"></span> *@
+                    <div class="mb-2">
+                        <a class="text-primary text-decoration-none existingModiferModalBtn" data-bs-toggle="modal">+ Add Existing Modifer</a>
+                    </div>
+                    <input type="hidden" id="modifiersForEditNewGroup" />
+                    <div class="modifierBadges" id="badgesForEditGroup"></div>
+                </div>
+                <div class="modal-footer d-flex justify-content-lg-end">
+                    <button type="button" id="saveModifierGroupBtn" onclick="updateModifierGroup()"
+                        class="btn updateBtn w-25">Save</button>
+                    <button type="button" class="btn cancelbtn w-25" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- -------------------------- Delete category Modal ------------------------- -->
+<div class="modal fade " id="deleteModifierGroupModal" tabindex="-1" aria-labelledby="deleteModifierGroupModal"
+    aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-body px-3 py-5 d-flex flex-column justify-content-center align-items-center">
+                <img src="~/images/pngegg.png" class="mb-3" width="50" alt="Warning">
+                <span>Are you sure you want to Delete this Modifier-Group?</span>
+
+                <div class="d-flex col-12 mt-4 container flex-nowrap justify-content-center">
+                    <input type="hidden" id="modifierGroupIdForDelete" name="modifierGroupId">
+                    <button type="submit" class="updateBtn btn w-25 " onclick="DeleteModifierGroup()"">Yes</button>
+                    <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">No</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

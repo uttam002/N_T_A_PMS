@@ -1,0 +1,91 @@
+/* --------------------------- KOT btns at Navbar --------------------------- */
+.kotBtns .custom-button{
+    border : 2px solid whitesmoke;
+    border-radius: 50px;
+    display: inline-block;
+    padding: 0.4em 0.8em;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    margin: 0px 5px 0px 10px;
+}
+.kotBtns .custom-button:hover{
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+.kotBtns .custom-button img{
+    width: 19px;
+}
+
+.activePageInOrderApp{
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+/* ----------------- For Wating Table modal shows right side ---------------- */
+.modal-left-show .modal-dialog {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 25%;
+    transform: translate3d(0, 0, 0);
+}
+
+.modal-left-show .modal-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.modal-left-show.fade .modal-dialog {
+    transition: transform 0.2s ease-out;
+    transform: translateX(100%);
+}
+
+.modal-left-show.fade.show .modal-dialog {
+    transform: translateX(0);
+}
+
+/* ---------------------------- Tabs at KOT Page ---------------------------- */
+
+.tabAtKOTPage button {
+    box-shadow: none;
+    text-decoration: none;
+    color: #0066a7;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  .tabAtKOTPage button:hover {
+    color: #000;
+  }
+  .activeTabAtKOTPage {
+    text-decoration: none;
+    box-shadow: none;
+    border-radius: 0px;
+    border-bottom: 2px solid #0066a7;
+  }
+.activeBtnInOrderApp{
+  background: #0066a7;
+  color: #fff;
+  
+}
+  /* -------------------------------- Kot Cards ------------------------------- */
+
+  .kotCard{
+    /* min-width: 25%; */
+    border-radius: 10px;
+    background-color: #fff;
+    border: 2px dashed #0066a7;
+    margin: 10px 7px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.374);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  .kotCard .card-body{
+    height: 200px;
+  }
+
+ 

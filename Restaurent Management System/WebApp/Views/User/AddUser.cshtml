@@ -1,0 +1,332 @@
+@using PMSCore.ViewModel;
+@using PMSWebApp.Extensions;
+@model PMSCore.ViewModel.NewUser
+@{
+    ViewData["Title"] = "Add User Page";
+    @* int editor = User.FindFirst(ClaimTypes.NameIdentifier) != null ? Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value) : 0; *@
+    int editor = User.GetUserId(); // Get the user ID from the claims (If you want to see method  go to > Extensions > JWTMiddleware.cs)
+}
+<div class=" bg-light min-vh-100">
+    <div class="row d-flex align-items-center justify-content-between">
+        <h2 class="pt-1 ps-1 text-blue col-sm-6  col-8  fw-bold ">Add new user</h2>
+        <button type="button" class=" mt-2 backbtn col-sm-3 col-md-2 col-lg-1 col-6" onclick="location.href='@Url.Action("UserList", "User")'">&lt;
+            Back</button>
+
+    </div>
+
+    <div class="mainContent">
+        <form asp-action="AddUser" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="EditorId" value=@editor />
+            <div class="row d-flex ">
+                <div class="col-md-6 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="text" asp-for="FirstName" id="Firstname" placeholder="" class="form-control"
+                            required />
+                        <label for="Firstname">First Name</label>
+                        <span class="text-danger" asp-validation-for="FirstName"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="text" asp-for="LastName" placeholder="" id="Lastname" class="form-control"
+                            required />
+                        <label for="Lastname">Last Name</label>
+                        @* <span class="text-danger" asp-validation-for="LastName"></span> *@
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex row">
+                <div class="col-md-6 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="text" asp-for="UserName" placeholder="" id="Username" class="form-control"
+                            required />
+                        <label for="Username">User Name</label>
+                        <span class="text-danger" asp-validation-for="UserName"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12 p-2">
+                    <div class="form-floating">
+                        <select asp-for="RoleId" class="form-select" id="RoleDropdown" required>
+                            <option selected value="">Select Role</option>
+                            <option value=1>Admin</option>
+                            <option value=2>Account Manager</option>
+                            <option value=3>Chef</option>
+                        </select>
+                        <label for="RoleDropdown">Role</label>
+                        <span class="text-danger" asp-validation-for="RoleId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class=" d-flex row">
+                <div class="col-md-6 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="email" asp-for="EmailId" placeholder="" id="email" class="form-control" required />
+                        <label for="email">Email</label>
+                        <span class="text-danger" asp-validation-for="EmailId"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12 p-2">
+                    <div class="form-floating ">
+                        <span class="icon"><img src="~/images/icons/eye.png" onclick="showPassword('Password','pImage')"
+                                id="pImage" alt="eye_button" width="20" height="20"></span>
+                        <input type="Password" asp-for="Password" placeholder="" id="Password" class="form-control"
+                            required />
+                        @* <input type="text" asp-for="Status" placeholder="" id="Status" class="form-control" hidden /> *@
+                        <label for="Password">Password</label>
+                        <span class="text-danger" asp-validation-for="Password"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="d-flex p-2 w-100">
+                <!-- Browse Files -->
+                    <div id="dropzone"
+                        class="dropzone w-100 d-flex flex-column justify-content-center align-items-center">
+                        <i class="bi bi-cloud-arrow-up z-2 fs-4 "></i>
+                        <h6 class="colour-styling d-flex justify-content-center">Browse File</h6>
+                        <input asp-for="Photo" id="fileInput" class="upload-input" accept="image/*" />
+                        <div id="fileDetails" class="mt-2 d-none">
+                            <p id="fileName" class="mb-1"></p>
+                            <img id="imagePreview" src="#" alt="Image Preview" class="img-thumbnail mb-1"
+                                style="max-width: 200px; max-height: 200px; display: none;" />
+                            <button type="button" id="removeImageButton" class="btn btn-danger">Remove Image</button>
+                        </div>
+                    </div>
+                
+            </div>
+            <div class="d-flex row">
+                <div class="col-md-4 col-12 p-2">
+                    <div class="form-floating mb-3">
+                        <select id="CountryDropdown" asp-for="ContryId" class="form-select"
+                            asp-items="ViewBag.CountryList">
+                            <option value="">Select a Country</option>
+                        </select>
+
+                        <label for="CountryDropdown">Country</label>
+                        <span class="text-danger" asp-validation-for="ContryId"></span>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4 p-2">
+                    <div class="form-floating mb-3">
+                        <select id="StateDropdown" asp-for="StateId" class="form-select">
+                            <option value="">Loading...</option> <!-- Placeholder -->
+                        </select>
+                        <label for="StateDropdown">State</label>
+                        <span class="text-danger" asp-validation-for="StateId"></span>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4 p-2">
+                    <div class="form-floating mb-3">
+                        <select id="CityDropdown" asp-for="CityId" class="form-select">
+                            <option value="">Loading...</option> <!-- Placeholder -->
+                        </select>
+                        <label for="CityDropdown">City</label>
+                        <span class="text-danger" asp-validation-for="CityId"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex ">
+                <div class="col-md-4 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="text" asp-for="Address" placeholder="" id="address" class="form-control"
+                            required />
+                        <label for="address">Address</label>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="text" asp-for="ZipCode" placeholder="" id="zipcode" class="form-control"
+                            required />
+                        <label for="zipcode">ZipCode</label>
+                        <span class="text-danger" asp-validation-for="ZipCode"></span>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12 p-2">
+                    <div class="form-floating">
+                        <input type="text" asp-for="PhoneNumber" placeholder="" id="Phone" class="form-control"
+                            required />
+                        <label for="Phone">Phone</label>
+                        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="d-flex col-md-6 col-lg-4 col-12">
+                <button type="submit" class="btn updateBtn mt-2 me-1 w-50">Create User</button>
+                <button type="reset" class="mt-2 ms-1 btn cancelbtn w-50" asp-action="AddUser"
+                    asp-controller="User">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var countryId = $('#CountryDropdown').val();
+        var stateId = $('#StateDropdown').val();
+        var cityId = $('#CityDropdown').val();
+
+        // Load the State dropdown based on StateId
+        if (stateId) {
+            $.ajax({
+                url: '/Profile/GetStates',
+                type: 'GET',
+                data: { countryId: countryId },
+                dataType: 'json',
+                success: function (response) {
+                    $('#StateDropdown').html('<option value="">Select State</option>');
+                    if (response.length > 0) {
+                        $.each(response, function (i, state) {
+                            var selected = state.stateId == stateId ? 'selected' : '';
+                            $('#StateDropdown').append(`<option value="${state.stateId}" ${selected}>${state.stateName}</option>`);
+                        });
+                    }
+                }
+            });
+        }
+
+        // Load the City dropdown based on CityId
+        if (cityId) {
+            $.ajax({
+                url: '/Profile/GetCities',
+                type: 'GET',
+                data: { stateId: stateId },
+                dataType: 'json',
+                success: function (response) {
+                    $('#CityDropdown').html('<option value="">Select City</option>');
+                    if (response.length > 0) {
+                        $.each(response, function (i, city) {
+                            var selected = city.cityId == cityId ? 'selected' : '';
+                            $('#CityDropdown').append(`<option value="${city.cityId}" ${selected}>${city.cityName}</option>`);
+                        });
+                    }
+                }
+            });
+        }
+
+        // Fetch States when Country changes
+        $('#CountryDropdown').change(function () {
+            var newCountryId = $(this).val();
+            $('#StateDropdown').html('<option value="">Loading...</option>');
+            $('#CityDropdown').html('<option value="">Select City</option>');
+
+            if (newCountryId) {
+                $.ajax({
+                    url: '/Profile/GetStates',
+                    type: 'GET',
+                    data: { countryId: newCountryId },
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#StateDropdown').html('<option value="">Select State</option>');
+                        if (response.length > 0) {
+                            $.each(response, function (i, state) {
+                                $('#StateDropdown').append(`<option value="${state.stateId}">${state.stateName}</option>`);
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        // Fetch Cities when State changes
+        $('#StateDropdown').change(function () {
+            var newStateId = $(this).val();
+            $('#CityDropdown').html('<option value="">Loading...</option>');
+
+            if (newStateId) {
+                $.ajax({
+                    url: '/Profile/GetCities',
+                    type: 'GET',
+                    data: { stateId: newStateId },
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#CityDropdown').html('<option value="">Select City</option>');
+                        if (response.length > 0) {
+                            $.each(response, function (i, city) {
+                                $('#CityDropdown').append(`<option value="${city.cityId}">${city.cityName}</option>`);
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        //
+    });
+$(document).ready(function () {
+        $('#fileInput').change(function () {
+            const file = this.files[0];
+            if (file) {
+                $('#fileDetails').removeClass('d-none');
+                $('#fileName').text(file.name);
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#imagePreview').attr('src', e.target.result).show();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#imagePreview').hide();
+                }
+            } else {
+                $('#fileDetails').addClass('d-none');
+            }
+        });
+
+        $('#removeImageButton').click(function () {
+            $('#fileInput').val('');
+            $('#fileDetails').addClass('d-none');
+            $('#imagePreview').hide();
+        });
+    });
+</script>
+
+
+
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#countryDropdown").change(function () {
+            var countryId = $(this).val();
+            $("#stateDropdown").empty().append('<option value="">Select State</option>');
+            $("#cityDropdown").empty().append('<option value="">Select City</option>');
+
+            if (countryId) {
+                $.ajax({
+                    url: '/User/GetStates',
+                    type: 'GET',
+                    data: { countryId: countryId },
+                    success: function (data) {
+                        $.each(data, function (i, state) {
+                            $("#stateDropdown").append('<option value="' + state.value + '">' + state.text + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        $("#stateDropdown").change(function () {
+            var stateId = $(this).val();
+            $("#cityDropdown").empty().append('<option value="">Select City</option>');
+
+            if (stateId) {
+                $.ajax({
+                    url: '/User/GetCities',
+                    type: 'GET',
+                    data: { stateId: stateId },
+                    success: function (data) {
+                        $.each(data, function (i, city) {
+                            $("#cityDropdown").append('<option value="' + city.value + '">' + city.text + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script> *@

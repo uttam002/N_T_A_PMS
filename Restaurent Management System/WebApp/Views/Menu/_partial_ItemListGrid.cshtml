@@ -1,0 +1,124 @@
+@using PMSCore.ViewModel
+@model IEnumerable<ItemDetails>
+
+@{
+    PaginationDetails paginationDetails = ViewBag.paginationDetails as PaginationDetails ?? new PaginationDetails();
+}
+        <input type="hidden" id="paginationDetailsForItemsPage" data-page-size="@paginationDetails.PageSize"
+            data-page-number="@paginationDetails.PageNumber" data-sort-column="@paginationDetails.SortColumn"
+            data-sort-order="@paginationDetails.SortOrder" data-search-query="@paginationDetails.SearchQuery"
+            data-from-date="@paginationDetails.FromDate" data-to-date="@paginationDetails.ToDate"
+            data-total-records="@paginationDetails.totalRecords" />
+<div class="row table-responsive table-fixed overflow-auto mt-5 ms-3 me-5 selectable-table">
+    <table class="table">
+        <thead class="bg-white">
+            <tr>
+                <th class="text-secondary">
+                    <div class="form-check">
+                        <input class="form-check-input select-all-checkbox" type="checkbox">
+                        <span class="ms-2 ">Item Name</span>
+                    </div>
+                </th>
+                <th class="text-center text-secondary">Item Type</th>
+                <th class="text-center text-secondary">Unit Price</th>
+                <th class="text-center text-secondary">Quantity</th>
+                <th class="text-secondary">Available</th>
+                <th class="text-secondary">Action</th>
+    
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (ItemDetails item in Model)
+                {
+                    <tr class="selectable-row">
+                        <td>
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input row-checkbox" data-itemid="@item.id" type="checkbox">
+                                @if(item.photo == null)
+                                {
+                                    <img src="~/images/dining-menu.png" width="25px"  height="25px" class="ms-2">
+                                }
+                                else
+                                {
+                                    <img src="@item.photo" width="25px" height="25px" class="ms-2">
+                                }
+                                <span class="ms-2">@Html.DisplayFor(modelItem => item.itemName)</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            @if (item.itemType == "Veg")
+                            {
+                                <img src="~/images/icons/veg-icon.svg" width="30px">
+                            }
+                            else if (item.itemType == "Non-Veg")
+                            {
+                                <img src="~/images/icons/non-veg-icon.svg" width="30px">
+                            }
+                            else if (item.itemType == "Egg")
+                            {
+                                <img src="~/images/icons/Egg.png" width="40px" class="ms-3">
+                            }
+                            else if (item.itemType == "Vegan")
+                            {
+                                <img src="~/images/icons/vegan-icon.svg" width="30px">
+                            }
+                        </td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.unitPrice)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.quantity)</td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" @(item.isAvailable ? "checked" : "") disabled>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="me-3 text-decoration-none" id="EditItemBtn" data-bs-toggle="modal" onclick="openEditModal(@item.id)">
+                                <i class="bi bi-pencil-square text-primary"></i>
+                            </a>
+                            <a data-bs-toggle="modal" data-bs-target="#deleteItemModal" onclick="AssignValue(@item.id)" class="text-danger border-0 text-decoration-none">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No results found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<!-- -------------------------- Edit Modal for Items -------------------------- ------------------------->
+
+
+
+<!-- ------------------------- Delete Modal For Items ------------------------- ------------------------->
+<div class="modal fade " id="deleteItemModal" tabindex="-1" aria-labelledby="deleteItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-body px-3 py-5 d-flex flex-column justify-content-center align-items-center">
+                <img src="~/images/pngegg.png" class="mb-3" width="50" alt="Warning">
+                <span>Are you sure you want to Delete this item?</span>
+
+                <form asp-action="DeleteItemById" asp-controller="Menu"
+                    class="d-flex col-12 mt-4 container flex-nowrap justify-content-center">
+                    <input type="number" id="itemIdForDelete" name="itemId" hidden>
+                    <button type="submit" class="updateBtn btn w-25 " for="DeleteFormForItems">Yes</button>
+                    <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">No</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    
+</script>

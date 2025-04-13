@@ -1,0 +1,122 @@
+@using PMSCore.ViewModel
+@model IEnumerable<ModifierDetails>
+
+@{
+    PaginationDetails paginationDetails = ViewBag.paginationDetails as PaginationDetails;
+}
+        <input type="hidden" id="paginationDetailsForModifiersPage" data-page-size="@paginationDetails.PageSize"
+            data-page-number="@paginationDetails.PageNumber" data-sort-column="@paginationDetails.SortColumn"
+            data-sort-order="@paginationDetails.SortOrder" data-search-query="@paginationDetails.SearchQuery"
+            data-from-date="@paginationDetails.FromDate" data-to-date="@paginationDetails.ToDate"
+            data-total-records="@paginationDetails.totalRecords" />
+<div class="table-responsive table-fixed mt-5 ms-3 me-3  selectable-table">
+    <table class="table  col-12 border-none px-0">
+        <thead class="bg-white">
+            <tr>
+                <th class="text-secondary">
+                    <div class="form-check">
+                        <input class="form-check-input select-all-checkbox " type="checkbox" value="" id="selectAllModifiers">
+                        <span class="ms-2">Name</span>
+                    </div>
+                </th>
+                <th class="text-center text-secondary">
+                    <span class="sort text-decoration-none">Unit</span>
+                </th>
+                <th class="text-center text-secondary">
+                    <span class="sort text-decoration-none">Rate</i></span>
+                </th>
+                <th class="text-center text-secondary">
+                    <span class="sort text-decoration-none">Quantity</i></span>
+                </th>
+                <th class="text-secondary">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                @foreach (var modifier in Model)
+                {
+                    <tr class="selectable-row">
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input row-checkbox" type="checkbox" value=""
+                                       id="flexCheckDefault">
+                                <label class="form-check-label ms-2" for="flexCheckDefault">
+                                    @Html.DisplayFor(modelItem => modifier.modifierName)
+                                </label>
+                            </div>
+                        </td>
+                        <td class="text-center">@modifier.unitType</td>
+                        <td class="text-center">@modifier.unitPrice</td>
+                        <td class="text-center">@modifier.quantity</td>
+                        <td>
+                            <a id="EditModifierBtn" data-bs-toggle="modal" data-bs-target="#EditModifierModal"
+                               data-modifier='@Html.Raw(Json.Serialize(modifier))' class="me-2 text-decoration-none">
+                                <i class="bi bi-pencil-square text-primary"></i>
+                            </a>
+
+                            <a data-bs-toggle="modal" data-bs-target="#DeleteModifierModal"
+                               onclick="AssignValueForModifier(@modifier.id)" class="border-0 text-decoration-none">
+                                <i class="bi bi-trash-fill text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No results found</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<!--Modifier delete modal -->
+<div class="modal fade" id="DeleteModifierModal" tabindex="-1" aria-labelledby="DeleteModifierModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="modal-title" id="deleteModaliLabel">Delete Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="col-12 d-flex justify-content-center">
+                    <i class="bi bi-exclamation-triangle-fill "></i>
+                </div>
+                <p class="d-flex justify-content-center">Are you sure you want to delete this Modifier?</p>
+
+                <form asp-action="DeleteModifierById" asp-controller="Menu"
+                    class="d-flex col-12 mt-4 container flex-nowrap justify-content-center">
+                    <input type="number" id="modifierIdForDelete" name="modifierId" hidden>
+                    <button type="submit" class="updateBtn btn w-25">Yes</button>
+                    <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">No</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).on("click", "#EditModifierBtn", function () {
+        var modifier = $(this).data("modifier"); // Get JSON object
+        console.log("Modifier Data:", modifier); // Debugging
+
+        // Set form values
+        $("#UpdateModifierGroup").val(modifier.groupId);
+        $("#UpdateModifierName").val(modifier.modifierName);
+        $("#EditModifierRate").val(modifier.unitPrice);
+        $("#EditModifierQuantity").val(modifier.quantity);
+        $("#UpdateModifierUnit").val(modifier.unitType);
+        $("#modifierId").val(modifier.id);
+        $("#descriptionForModifier").val(modifier.description);
+    });
+</script>

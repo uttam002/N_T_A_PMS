@@ -1,0 +1,111 @@
+@using PMSCore.ViewModel
+@using PMSWebApp.Extensions;
+@model List<SectionDetails>
+
+@{
+    int editorId = User.GetUserId();
+}
+<div class="row overflow-auto" style="height: 400px;">
+    <ul class="nav flex-column" id="sectionList" style="gap: 13px;">
+        @foreach (SectionDetails sections in Model)
+        {
+            <li class="nav-link d-flex section-area" id="section-@sections.SectionId" data-section-id="@sections.SectionId">
+                <div class="d-flex align-items-center">
+                    <a class="d-flex flex-nowrap text-decoration-none category-link"
+                        onclick="getTablesbySectionId(@sections.SectionId); highlightSection(@sections.SectionId);">
+                        <img src="~/images/icons/dots-6-vertical.svg" height="30px">
+                        <div style="width: 130px;" class="text-wrap text-black ms-1 fw-bold">
+                            @sections.SectionName
+                        </div>
+                    </a>
+                </div>
+                <a data-bs-toggle="modal" data-bs-target="#EditSectionModal"
+                    onclick="FillFormForEditSection(@sections.SectionId, '@sections.SectionName', '@sections.Description'); highlightSection(@sections.SectionId);">
+                    <img src="~/images/icons/pen.svg" class="ms-auto">
+                </a>
+                <a data-bs-toggle="modal" data-bs-target="#deleteSectionModal"
+                    onclick="AssignValueForSection(@sections.SectionId); highlightSection(@sections.SectionId);"
+                    class="border-0 sweetalert">
+                    <img src="~/images/icons/trash3-fill.svg" alt="">
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+<!-- --------------------------- Edit Section Modal -------------------------- ------------------------->
+<div class="modal fade" id="EditSectionModal" tabindex="-1" aria-labelledby="EditSectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditSectionModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="EditSectionForm" asp-action="EditSection" asp-controller="SectionAndTables">
+                <input type="hidden" id="editorIdForEditSection" name="editorId" value="@editorId" />
+                    <input type="number" id="sectionIdForEdit" name="sectionId" hidden>
+                    <div class="form-floating mb-3">
+                        <input type="text" id="EditSectionName" name="SectionName" class="form-control" required />
+                        <label for="EditSectionName">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea id="EditSectionDescription" name="Description" class="form-control"></textarea>
+                        <label class="form-label" for="editSectionDescription">Description</label>
+                    </div>
+                    <div class="m-2 me-3 d-flex flex-nowrap justify-content-end">
+                        @* <button type="submit" onclick="editSection(sectionId, SectionName, Description)" class="updateBtn btn w-25" for="EditSectionForm">Save</button> *@
+                        <button type="submit" class="updateBtn btn w-25" for="EditSectionForm">Save</button>
+                        <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- -------------------------- Delete section Modal ------------------------- -->
+<div class="modal fade " id="deleteSectionModal" tabindex="-1" aria-labelledby="deleteSectionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-body px-3 py-5 d-flex flex-column justify-content-center align-items-center">
+                <img src="~/images/pngegg.png" class="mb-3" width="50" alt="Warning">
+                <span>Are you sure you want to Delete this Section?</span>
+
+                <form id="DeleteSectionForm" asp-action="DeleteSection" asp-controller="SectionAndTables"
+                    class="d-flex col-12 mt-4 container flex-nowrap justify-content-center">
+                    <input type="hidden" id="editorIdForDeleteSection" value="@editorId" />
+                    <input type="hidden" id="sectionIdForDelete" name="sectionId" hidden>
+                    <button type="submit" class="updateBtn btn w-25 " for="DeleteSectionForm">Yes</button>
+                    <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">No</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   function AssignValueForSection(id) {
+    console.log("section id: " + id);
+    $("#sectionIdForDelete").val(id);
+}
+
+function FillFormForEditSection(id, name, desc) {
+    console.log("section id: " + id);
+    $("#sectionIdForEdit").val(id);
+    $("#EditSectionName").val(name);
+    $("#EditSectionDescription").val(desc);
+}
+
+function highlightSection(id) {
+    // Remove highlight from all categories
+    $('.section-area').removeClass('active-category');
+
+    // Add highlight to the selected section
+    $(`#section-${id}`).addClass('active-category');
+}
+
+</script>

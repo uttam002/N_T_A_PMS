@@ -1,0 +1,434 @@
+html {
+  font-size: 14px;
+  max-height: 100vh;
+  overflow: auto;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* visibility: hidden; */
+  margin-bottom: 60px;
+}
+/* ------------------------- To hide scrollbar line ------------------------- */
+.scrollbar-none {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+.text-blue {
+  color: #0066a7;
+}
+.border-blue{
+  border-color: #0066a7 !important;
+}
+.bg-white{
+  background-color: white !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.374);
+}
+#sidebar li a {
+  color: black;
+  text-decoration: none;
+  width: 100%;
+}
+
+.activepage {
+  font-weight: bold;
+  background-color: #49494925 !important ;
+  color: #0066a7 !important;
+}
+#sidebar a[data-title] {
+  position: relative;
+}
+
+#sidebar a[data-title]::after {
+  content: attr(data-title);
+  position: absolute;
+  top: 100%; /* Position above the element */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #094f96;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.2s ease-in-out;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tooltip arrow */
+#sidebar a[data-title]::before {
+  content: "";
+  position: absolute;
+  top: 70%; /* Adjust to align with tooltip */
+  left: 50%;
+  transform: translateX(150%);
+  transform: translateY(10%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #094f96 transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.2s ease-in-out;
+  z-index: 9;
+}
+
+#sidebar a[data-title]:hover::after,
+#sidebar a[data-title]:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.backbtn,
+.cancelbtn {
+  border-radius: 10px;
+  border: 2px solid #0066a7;
+  /* width: 100%; */
+  height: 45px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.updateBtn {
+  border-radius: 10px;
+  width: 100px;
+  height: 45px;
+  color: white;
+  background-color: #0066a7;
+}
+#navbar {
+  background-color: #0066a7;
+}
+.rightBox {
+  background-color: #f2f2f2;
+  width: 100%;
+}
+
+.category-box-shadow {
+  width: 280px;
+  height: 700px;
+  background: linear-gradient(to right, white, rgb(225, 224, 224));
+}
+.addBtn {
+  width: 120px;
+  height: 38px;
+  color: white;
+  border-color: #0066a7;
+  background-color: #0066a7;
+}
+
+.paginationBtn {
+  height: 30px;
+  color: black;
+  border-color: black;
+  background-color: white;
+}
+
+.paginationText {
+  font-size: 12px;
+}
+#UserTable {
+  font-size: 0.9rem;
+}
+
+/* for upload btn */
+.uploadSection {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100px;
+  /* border: 2px dashed #000; */
+}
+.uploadSection input {
+  position: absolute;
+  font-size: 50px;
+  opacity: 0;
+  right: 0;
+  top: 0;
+  height: 100px;
+  width: 100%;
+}
+
+.form-floating .icon {
+  position: absolute;
+  right: 8px;
+  font-size: 1.1em;
+  line-height: 40px;
+}
+
+.dropzone {
+  border: 1px dashed #0066a7;
+  border-radius: 3px;
+  text-align: center;
+  z-index: 0;
+  position: relative;
+}
+
+.upload-input {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.background-box-shade {
+  width: 280px;
+  border-right: 1px solid #0066a7;
+  height: 610px;
+  background: linear-gradient(to right, white, rgb(225, 224, 224));
+}
+/*-------------------- Category Section ------------------------*/
+.category-item {
+  cursor: pointer;
+}
+
+.category-link {
+  cursor: pointer;
+}
+.active-category {
+  background-color: #f0f0f0; /* Light grey highlight */
+  border-radius: 5px;
+}
+
+/*-------------------- Item Section ------------------------*/
+
+.modifierside {
+  background-color: #fff9db; /* Light yellow shade */
+}
+.modifierGroupBox {
+  border-bottom: 1px solid #ddd; /* Slight line after each appended child */
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.tabAtMenuPage button {
+  box-shadow: none;
+  text-decoration: none;
+  color: #0066a7;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.tabAtMenuPage button:hover {
+  box-shadow: none;
+  text-decoration: none;
+  color: #0066a7;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.tabAtMenuPage button:focus {
+  text-decoration: none;
+  box-shadow: none;
+  border-radius: 0px;
+  border-bottom: 2px solid #0066a7;
+}
+/* --------------------- For Every Tables in Project -------------------- */
+.mainContent {
+  min-height: 400px;
+  padding: 20px;
+  background-color: #fff;
+  /* padding: 20px; */
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.374);
+}
+.table-responsive {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.section-fixed{
+  height: 510px;
+}
+
+.section-fixed ul li{
+  display: flex;
+  justify-content: space-between;
+} 
+.table-fixed {
+  height: 400px;
+}
+.table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: black;
+}
+@media screen and (max-width: 1129px) {
+  .table-responsive table{
+    zoom: 80%;
+  }
+  .backbtn {
+    border-radius: 10px;
+    border: 2px solid #0066a7;
+    /* width: 100%; */
+    width: 100px;
+    height: 38px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+ 
+  .addBtn {
+    width: 100px;
+    height: 38px;
+    color: white;
+    font-size: medium;
+    border-color: #0066a7;
+    background-color: #0066a7;
+  }
+  img {
+    zoom: 90%;
+  }
+}
+@media screen and (max-width: 975px) {
+  .updateBtn {
+    border-radius: 10px;
+    width: 100px;
+    height: 45px;
+    /* color: rgb(255, 0, 0); */
+    font-size: small;
+    background-color: #0066a7;
+    overflow: none;
+  }
+  table thead tr th{
+    font-size: 0.9em;
+  }
+  .addBtn {
+    width: 90px;
+    height: 38px;
+    font-size: small;
+    color: white;
+    border-color: #0066a7;
+    background-color: #0066a7;
+  }
+  img {
+    zoom: 80%;
+  }
+}
+
+/*--------------------------------------MEnu CSS--------------------------------------------*/
+
+    /* @media (max-width: 999px) {
+        .categorySidebar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 80%;
+            max-width: 300px;
+            background: linear-gradient(145deg, #f5f7fa, #e4e5f1);
+            z-index: 1050;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            padding-bottom: 20px;
+            transition: all 0.4s ease-in-out;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .categorySidebar.activeSection {
+            display: block;
+            animation: slideInLeft 0.4s ease-in-out forwards;
+        }
+    }
+
+    @keyframes slideInLeft {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(0%);
+        }
+    }
+
+
+    #toggleCategoryBtn {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        transition: all 0.3s ease-in-out;
+    }
+
+    #toggleCategoryBtn:hover {
+        transform: scale(1.05);
+    } */
+
+
+
+
+/*--------------------------------Media Query----------------------------------*/
+@media screen and (max-width: 768px) {
+  h1 {
+    zoom: 80%;
+  }
+  h2 {
+    zoom: 80%;
+  }
+  h3 {
+    zoom: 80%;
+  }
+  label {
+    zoom: 80%;
+  }
+  img {
+    zoom: 70%;
+  }
+  .fs-3 {
+    zoom: 80%;
+  }
+  .fs-5 {
+    zoom: 80%;
+  }
+  .addBtn {
+    width: 80px;
+    height: 38px;
+    color: white;
+    font-size: x-small;
+    border-color: #0066a7;
+    background-color: #0066a7;
+  }
+  .backbtn,
+  .cancelbtn {
+    border-radius: 10px;
+    border: 2px solid #0066a7;
+    /* width: 100%; */
+    height: 30px;
+    cursor: pointer;
+    font-size: 0.8em;
+  }
+
+  .updateBtn {
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+    color: white;
+    font-size: x-small;
+    font-weight: bold;
+    background-color: #0066a7;
+  }
+}
