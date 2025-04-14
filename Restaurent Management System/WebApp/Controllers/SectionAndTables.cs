@@ -5,6 +5,7 @@ using PMSCore.Beans;
 using PMSCore.ViewModel;
 using PMSData;
 using PMSServices.Interfaces;
+using PMSWebApp.Extensions;
 
 namespace PMSWebApp.Controllers;
 
@@ -16,15 +17,15 @@ public class SectionAndTablesController : Controller
         _sectionAndTablesService = sectionAndTablesService;
     }
     ResponseResult result = new ResponseResult();
-    public async Task<IActionResult> SectionAndTables()
+
+
+
+    public async Task<IActionResult> SectionAndTables(PaginationDetails paginationDetails)
     {
         try
         {
-            PaginationDetails paginationDetails = new PaginationDetails();
             paginationDetails.PageSize = 2;
             result = await _sectionAndTablesService.GetDefaultAreaDeatils(paginationDetails);
-            ViewBag.paginationDetails = paginationDetails;
-
         }
         catch (Exception ex)
         {
@@ -38,130 +39,163 @@ public class SectionAndTablesController : Controller
         @TempData["LayoutName"] = "_Layout";
         return View(areaDetails);
     }
+
+
+    #region Section
+
     [HttpPost]
-    public async Task<IActionResult> GetTables(int sectionId,PaginationDetails paginationDetails)
+    public async Task<IActionResult> AddSection(SectionDetails section)
     {
         try
         {
-            result = await _sectionAndTablesService.GetTables(sectionId,paginationDetails);
-            ViewBag.paginationDetails = paginationDetails;
+            result = await _sectionAndTablesService.AddSection(section);
+            List<SectionDetails> sectionList = result.Data as List<SectionDetails> ?? new List<SectionDetails>();
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status });
         }
         catch (Exception ex)
         {
             result.Message = ex.Message;
             result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
         }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        List<TableDetails> tableList = result.Data as List<TableDetails> ?? new List<TableDetails>();
-        return PartialView("_partial_TablesListGrid", tableList);
     }
 
-    public async Task<IActionResult> AddSection([FromForm]string SectionName, [FromForm]string Description)
+    [HttpPost]
+    public async Task<IActionResult> DeleteSection(SectionDetails section)
     {
         try
         {
-            result = await _sectionAndTablesService.AddSection(SectionName, Description);
-        }
-        catch (Exception ex)
-        {
-            result.Message = ex.Message;
-            result.Status = ResponseStatus.Error;
-        }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        return RedirectToAction("SectionAndTables", "SectionAndTables");
-    }
-
-    public async Task<IActionResult> DeleteSection(int sectionId,int editorId)
-    {
-        try
-        {
-            result = await _sectionAndTablesService.DeleteSection(sectionId,editorId);
+            result = await _sectionAndTablesService.DeleteSection(section.SectionId, section.editorId);
+            List<SectionDetails> sectionList = result.Data as List<SectionDetails> ?? new List<SectionDetails>();
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status });
 
         }
         catch (Exception ex)
         {
             result.Message = ex.Message;
             result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
         }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        return RedirectToAction("SectionAndTables", "SectionAndTables");
+
     }
     [HttpPost]
-    public async Task<IActionResult> EditSection(int sectionId, string SectionName, string Description, int editorId)
+    public async Task<IActionResult> EditSection(SectionDetails section)
     {
 
         try
         {
-            result = await _sectionAndTablesService.EditSection(sectionId, SectionName, Description, editorId);
+            result = await _sectionAndTablesService.EditSection(section);
+            List<SectionDetails> sectionList = result.Data as List<SectionDetails> ?? new List<SectionDetails>();
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status });
         }
         catch (Exception ex)
         {
             result.Message = ex.Message;
             result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
         }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-                                                            // return RedirectToAction("GetTables", "SectionAndTables", new{id = sectionId});
-        return RedirectToAction("SectionAndTables", "SectionAndTables");
     }
+
+    #endregion
+
+    #region Tables
+    [HttpPost]
+    public async Task<IActionResult> GetTables(int sectionId, PaginationDetails paginationDetails)
+    {
+        try
+        {
+            result = await _sectionAndTablesService.GetTables(sectionId, paginationDetails);
+            List<TableDetails> tableList = result.Data as List<TableDetails> ?? new List<TableDetails>();
+            string partialView = await this.RenderPartialViewToString("_partial_TablesListGrid", tableList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status, pagination = paginationDetails });
+
+        }
+        catch (Exception ex)
+        {
+            result.Message = ex.Message;
+            result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> AddNewTable(TableDetails newTable)
     {
         try
         {
-            if (ModelState.IsValid)
-            {
-                result = await _sectionAndTablesService.AddTable(newTable);
-            }
-            else
-            {
-                result.Message = "Model State is not valid!!!";
-                result.Status = ResponseStatus.Error;
-            }
+
+            result = await _sectionAndTablesService.AddTable(newTable);
+            (List<SectionDetails> sectionList, PaginationDetails pagination) = ((List<SectionDetails>, PaginationDetails))result.Data;
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status, pagination = pagination });
         }
         catch (Exception ex)
         {
             result.Message = ex.Message;
             result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
         }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString();
-        // return Json(new { status = result.Status, message = result.Message });
-        return RedirectToAction("SectionAndTables","SectionAndTables");
     }
-    public async Task<IActionResult> DeleteTableById(int tableId){
-        try{
-            result = await _sectionAndTablesService.DeleteTable(tableId);
-        }catch(Exception ex){
-            result.Message=ex.Message;
-            result.Status=ResponseStatus.Error;
-        }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        return RedirectToAction("SectionAndTables", "SectionAndTables");
-    }
-
     [HttpPost]
-    public async Task<IActionResult> UpdateTable(TableDetails updateTable){
-        try{
-            
-                result = await _sectionAndTablesService.UpdateTable(updateTable);
-            
-        }catch (Exception ex)
+    public async Task<IActionResult> DeleteTableById(int tableId, int editorId)
+    {
+        try
+        {
+            result = await _sectionAndTablesService.DeleteTable(tableId, editorId);
+            (List<SectionDetails> sectionList, PaginationDetails pagination) = ((List<SectionDetails>, PaginationDetails))result.Data;
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status, pagination = pagination });
+        }
+        catch (Exception ex)
         {
             result.Message = ex.Message;
             result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
         }
-        TempData["ToastMessage"] = result.Message;
-        TempData["ToastStatus"] = result.Status.ToString();
-        return RedirectToAction("SectionAndTables","SectionAndTables");
     }
 
+    [HttpPost]
+    public async Task<IActionResult> UpdateTable(TableDetails updateTable)
+    {
+        try
+        {
+            result = await _sectionAndTablesService.UpdateTable(updateTable);
+            (List<SectionDetails> sectionList, PaginationDetails pagination) = ((List<SectionDetails>, PaginationDetails))result.Data;
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status, pagination = pagination });
 
+        }
+        catch (Exception ex)
+        {
+            result.Message = ex.Message;
+            result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
+        }
+    }
 
+    [HttpPost]
+    public async Task<IActionResult> MassDeleteTable(int[] tableIds, int editorId)
+    {
+        try
+        {
+            result = await _sectionAndTablesService.MassDeleteTableAsync(tableIds, editorId);
+            (List<SectionDetails> sectionList, PaginationDetails pagination) = ((List<SectionDetails>, PaginationDetails))result.Data;
+            string partialView = await this.RenderPartialViewToString("_partial_SectionListGrid", sectionList);
+            return Json(new { partialView = partialView, message = result.Message, status = result.Status, pagination = pagination });
+        }
+        catch (Exception ex)
+        {
+            result.Message = ex.Message;
+            result.Status = ResponseStatus.Error;
+            return Json(new { message = result.Message, status = result.Status });
+        }
+
+    }
+    
+    #endregion
 
 }
 

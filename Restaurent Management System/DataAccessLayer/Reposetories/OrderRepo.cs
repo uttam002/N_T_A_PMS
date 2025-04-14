@@ -58,15 +58,15 @@ public class OrderRepo : IOrderRepo
                Createat = o.Createat,
                Modifyat = o.Modifyat,
                OrderDetails = o.OrderDetails,
-               InvoiceItemModifierMappings = status == "Ready" && categoryId != 0
+               InvoiceItemModifierMappings = (status == "Ready" && categoryId != 0)
                    ? o.InvoiceItemModifierMappings
                        .Where(m => m.Item.CategoryId == categoryId && m.PreparedItems == m.ItemQuantity)
                        .ToList()
-                   : status == "Ready" && categoryId == 0
+                   : (status == "Ready" && categoryId == 0)
                    ? o.InvoiceItemModifierMappings
-                       .Where(m => m.PreparedItems == m.ItemQuantity)
+                       .Where(m => m.PreparedItems <= m.ItemQuantity)
                        .ToList()
-                   : status == "InProgress" && categoryId != 0
+                   : (status == "InProgress" && categoryId != 0)
                    ? o.InvoiceItemModifierMappings
                        .Where(m => m.Item.CategoryId == categoryId && m.PreparedItems < m.ItemQuantity)
                        .ToList()

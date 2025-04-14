@@ -5,10 +5,11 @@ namespace PMSData.Interfaces;
 
 public interface ITableRepo
 {
-    Task<ResponseResult> AddTableAsync(TableDetails newTable);
-    Task<List<TableDetails>> GetTablesBySectionId(int id,PaginationDetails paginationDetails);
-    Task<ResponseResult> DeleteTableAsync(int tableId);
-    Task<ResponseResult> MassDeleteTablesAsync(List<int> tableIds);
-    Task<ResponseResult> UpdateTableAsync(TableDetails updateTable);
+    Task<ResponseResult> AddTableAsync(Table newTable);
+    Task<List<Table>> GetTablesBySectionId(int id,PaginationDetails paginationDetails);
+    Task<ResponseResult> UpdateTableAsync(Table updateTable);
     Task<Table> GetTableAsync(int tableId);
+    Task<ResponseResult> MassUpdateTablesAsync(List<Table> tableList);
+    Task<List<Table>> GetTableListBySectionIdAsync(int sectionId);
+    Task<List<Table>> GetTableListFromTableIdsAsync(int[] tableIds);
 }

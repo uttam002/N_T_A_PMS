@@ -13,22 +13,22 @@ public class UserController : Controller
 {
     private readonly IUserService _userService;
     private readonly ICommonServices _commonServices;
-    private readonly IHubContext<SiganlRHUB> _hubContext;
-
-    public UserController(IUserService userService, ICommonServices commonServices, IHubContext<SiganlRHUB> hubContext)
+    // private readonly IHubContext<SiganlRHUB> _hubContext;
+// , IHubContext<SiganlRHUB> hubContext
+    public UserController(IUserService userService, ICommonServices commonServices)
     {
         _userService = userService;
         _commonServices = commonServices;
-        _hubContext = hubContext;
+        // _hubContext = hubContext;
     }
     ResponseResult result = new ResponseResult();
     // http://localhost:5253/User/TestSignalR
-    [HttpGet]
-    public async Task<IActionResult> TestSignalR()
-    {
-        await _hubContext.Clients.All.SendAsync("UserDataChanged", "test", new { Message = "Hello from SignalR!" });
-        return Ok("SignalR message sent!");
-    }
+    // [HttpGet]
+    // public async Task<IActionResult> TestSignalR()
+    // {
+    //     await _hubContext.Clients.All.SendAsync("UserDataChanged", "test", new { Message = "Hello from SignalR!" });
+    //     return Ok("SignalR message sent!");
+    // }
     // [AuthorizePermission("Users","can_View")]
     [HttpGet]
     public async Task<IActionResult> UserList(PaginationDetails paginationDetails)
@@ -92,7 +92,7 @@ public class UserController : Controller
         }
         TempData["ToastMessage"] = result.Message;
         TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        await _hubContext.Clients.Group("UserList").SendAsync("UserDataChanged", "add", newUser);
+        // await _hubContext.Clients.Group("UserList").SendAsync("UserDataChanged", "add", newUser);
         return RedirectToAction("AddUser", "User");
     }
 
@@ -146,7 +146,7 @@ public class UserController : Controller
         }
         TempData["ToastMessage"] = result.Message;
         TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        await _hubContext.Clients.Group("UserList").SendAsync("UserDataChanged", "update", updateUser);
+        // await _hubContext.Clients.Group("UserList").SendAsync("UserDataChanged", "update", updateUser);
         return RedirectToAction("UserList", "User");
     }
 
@@ -164,7 +164,7 @@ public class UserController : Controller
         }
         TempData["ToastMessage"] = result.Message;
         TempData["ToastStatus"] = result.Status.ToString(); // Convert Enum to String
-        await _hubContext.Clients.Group("UserPage").SendAsync("UserDataChanged", "delete", result);
+        // await _hubContext.Clients.Group("UserPage").SendAsync("UserDataChanged", "delete", result);
         return RedirectToAction("UserList", "User");
     }
 

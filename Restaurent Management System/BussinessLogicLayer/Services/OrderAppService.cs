@@ -20,6 +20,7 @@ public class OrderAppService : IOrderAppService
     private readonly ICategoryRepo _categoryRepo;
     private readonly IModifierRepo _modifierRepo;
 
+
     public OrderAppService(IOrderRepo orderRepo, IOrdersService ordersService, ITableRepo tableRepo, ICategoryRepo categoryRepo, ISectionRepo sectionRepo, ITaxesRepo taxRepo, IItemRepo itemRepo, IModifierRepo modifierRepo, IInvoiceItemMappingRepo invoiceItemMapping, IInvoiceRepo invoiceRepo, IInvoiceTaxesMappingRepo invoiceTaxesMapping)
     {
         _orderRepo = orderRepo;
@@ -43,7 +44,7 @@ public class OrderAppService : IOrderAppService
             List<KOTVM> listOfKOTs = new();
 
             List<Order> filteredOrders = await _orderRepo.GetOrdersByCategoryId(status, categoryId);
-            listOfKOTs = await FitKOTDataInKOTVM(status,filteredOrders);
+            listOfKOTs = await FitKOTDataInKOTVM(status, filteredOrders);
 
             if (listOfKOTs == null)
             {
@@ -74,7 +75,7 @@ public class OrderAppService : IOrderAppService
         }
         return result;
     }
-    private async Task<List<KOTVM>> FitKOTDataInKOTVM(string status,List<Order> orders)
+    private async Task<List<KOTVM>> FitKOTDataInKOTVM(string status, List<Order> orders)
     {
         try
         {
@@ -86,7 +87,7 @@ public class OrderAppService : IOrderAppService
                 (kot.tableName, kot.sectionName) = await _ordersService.GetTableBasedOrdersDetails(order.OrderDetails.FirstOrDefault().TableId);
                 kot.orderStatus = order.Status;
                 kot.orderAt = order.Createat;
-                kot.kotItems = await GetMappedItems(status,order.InvoiceItemModifierMappings);
+                kot.kotItems = await GetMappedItems(status, order.InvoiceItemModifierMappings);
                 kot.orderComments = await CreateOneGeneraleComments(kot.kotItems);
                 listOfKOTs.Add(kot);
             }
@@ -135,7 +136,8 @@ public class OrderAppService : IOrderAppService
                 orderedItem.quantity = firstItem.ItemQuantity;
                 orderedItem.preparedItems = firstItem.PreparedItems;
                 orderedItem.itemComments = firstItem.ExtraComments ?? "";
-                if(status == "Ready"){
+                if (status == "Ready")
+                {
                     orderedItem.isPrepared = true;
                 }
                 foreach (InvoiceItemModifierMapping mappedRow in group)
@@ -159,4 +161,43 @@ public class OrderAppService : IOrderAppService
         }
     }
 
+    public async Task<ResponseResult> UpdateKOT(List<KOTVM.KOTItemsVM> kotItems, int orderId)
+    {
+        try
+        {
+            if (kotItems == null || kotItems.Count == 0)
+            {
+                result.Message = "No items to update.";
+                result.Status = ResponseStatus.NotFound;
+                return result;
+            }
+            List<InvoiceItemModifierMapping> itemMapping = await _invoiceItemMapping.GetItemsForKOTAsync(orderId);
+            if (itemMapping == null)
+            {
+                result.Message = "Order not found.";
+                result.Status = ResponseStatus.NotFound;
+                return result;
+            }
+            foreach (KOTVM.KOTItemsVM item in kotItems)
+            {
+                InvoiceItemModifierMapping invoiceItemModifierMapping = itemMapping.FirstOrDefault(i => i.ItemId == item.itemId);
+                invoiceItemModifierMapping.PreparedItems = item.preparedItems;
+                invoiceItemModifierMapping.ExtraComments = item.itemComments;
+                result = await _invoiceItemMapping.UpdateItemMappingAsync(invoiceItemModifierMapping);
+                if (result.Status == ResponseStatus.Error)
+                {
+                    result.Message = "Error updating item mapping.";
+                    return result;
+                }
+            }
+            result.Message = "KOT updated successfully.";
+            result.Status = ResponseStatus.Success;
+        }
+        catch (Exception ex)
+        {
+            result.Message = ex.Message;
+            result.Status = ResponseStatus.Error;
+        }
+        return result;
+    }
 }

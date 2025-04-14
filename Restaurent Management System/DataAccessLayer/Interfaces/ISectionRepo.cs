@@ -5,9 +5,8 @@ namespace PMSData.Interfaces;
 
 public interface ISectionRepo
 {
-    Task<List<SectionDetails>> GetAllSectonsAsync();
-    Task<ResponseResult> DeleteSectionBySectionId(int id,int editorId);
-    Task<ResponseResult> AddSectionAsync(string SectionName, string description);
-    Task<ResponseResult> EditSectionAsync(int sectionId, string sectionName, string description,int editorId);
+    Task<List<Section>> GetAllSectonsAsync();
+    Task<ResponseResult> AddSectionAsync(Section newSection);
+    Task<ResponseResult> UpdateSectionAsync(Section updateSection);
     Task<Section> GetSectionAsync(int sectionId);
 }

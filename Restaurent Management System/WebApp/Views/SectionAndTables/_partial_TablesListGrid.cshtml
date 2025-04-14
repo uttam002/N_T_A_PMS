@@ -3,18 +3,12 @@
 @model IEnumerable<TableDetails>
 
 @{
-    PaginationDetails paginationDetails = ViewBag.paginationDetails as PaginationDetails;
     int editorId = User.GetUserId();
 }
-<input type="hidden" id="paginationDetailsForAreaPage" data-page-size="@paginationDetails.PageSize"
-    data-page-number="@paginationDetails.PageNumber" data-sort-column="@paginationDetails.SortColumn"
-    data-sort-order="@paginationDetails.SortOrder" data-search-query="@paginationDetails.SearchQuery"
-    data-from-date="@paginationDetails.FromDate" data-to-date="@paginationDetails.ToDate"
-    data-total-records="@paginationDetails.totalRecords" />
 
 <!-- Table Container -->
 <div class="row table-responsive overflow-auto mt-3 ms-3 me-5">
-    <table class="table selectable-table">
+    <table class="table selectable-table table-fixed">
         <thead>
             <tr>
                 <th class="text-secondary">
@@ -72,25 +66,3 @@
     </table>
 </div>
 
-
-<!------------------------------------------ Delete Table model ------------------------------------------>
-
-<div class="modal fade " id="deleteTableModal" tabindex="-1" aria-labelledby="deleteTableModalLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-centered">
-        <div class="modal-content ">
-            <div class="modal-body px-3 py-5 d-flex flex-column justify-content-center align-items-center">
-                <img src="~/images/pngegg.png" class="mb-3" width="50" alt="Warning">
-                <span>Are you sure you want to Delete this Table?</span>
-
-                <form id="DeleteTableForm" asp-action="DeleteTableById" asp-controller="SectionAndTables"
-                    class="d-flex col-12 mt-4 container flex-nowrap justify-content-center">
-                    <input type="hidden" id="editorIdForDeleteTable" name="editorId" value="@editorId" />
-                    <input type="hidden" id="tableIdForDelete" name="tableId">
-                    <button type="submit" class="updateBtn btn w-25 " for="DeleteTableForm">Yes</button>
-                    <button type="button" class="btn ms-3 cancelbtn w-25" data-bs-dismiss="modal">No</button>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>

@@ -3,24 +3,31 @@
 @{
     int editorId = User.GetUserId();
 }
-<div class="row overflow-auto section-fixed" >
+<div class="row overflow-auto section-fixed">
     <ul class="nav flex-column" id="categoryList" style="gap: 13px;">
         @foreach (var category in Model)
         {
-            <li class="nav-link d-flex category-item" id="category-@category.id" data-category-id="@category.id">
-                <div class="d-flex align-items-center">
-                    <a class="d-flex flex-nowrap text-decoration-none category-link"
+            <li class="nav-link d-flex justify-content-between align-items-center flex-wrap category-item transition-all hover-scale-transition"
+                id="category-@category.id"
+                data-category-id="@category.id"
+                >
+
+                <!-- Left: Icon + Name -->
+                <div class="d-flex align-items-center flex-grow-1 flex-wrap">
+                    <a class="d-flex flex-nowrap text-decoration-none category-link align-items-center"
                         onclick="getItemsbyCategoryId(@category.id);">
                         <img src="~/images/icons/dots-6-vertical.svg" height="30px">
-                        <div class="text-wrap text-black ms-1 fw-bold">
+                        <div class="text-wrap text-black ms-2 fw-bold" style="min-width: 0; max-width: 150px;">
                             @category.categoryName
                         </div>
                     </a>
                 </div>
-                <div class="showBtns" id="categoryBtns-@category.id">
+
+                <!-- Right: Buttons -->
+                <div class="d-flex align-items-center showBtns" id="categoryBtns-@category.id" style="gap: 10px;">
                     <a data-bs-toggle="modal" data-bs-target="#EditCategoryModal"
                         onclick="FillFormForEditCategory(@category.id, '@category.categoryName', '@category.description');">
-                        <img src="~/images/icons/pen.svg" class="ms-auto">
+                        <img src="~/images/icons/pen.svg">
                     </a>
                     <a data-bs-toggle="modal" data-bs-target="#deleteCategoryModal"
                         onclick="AssignValueForCategory(@category.id); highlightCategory(@category.id);"
@@ -28,11 +35,11 @@
                         <img src="~/images/icons/trash3-fill.svg" alt="">
                     </a>
                 </div>
-
             </li>
         }
     </ul>
 </div>
+
 
 
 <!------------------------------ Add Category Modal --------------------->

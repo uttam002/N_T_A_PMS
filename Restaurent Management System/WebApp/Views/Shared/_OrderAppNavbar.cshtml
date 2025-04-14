@@ -8,12 +8,12 @@
 <div class="navbar navbar-expand-lg bg-body-tertiary m-0 p-0" id="navbar">
 
     <div class="container-fluid navbar-bg">
- 
-            <a class="navbar-brand bg-white" id="navbarLogo">
 
-                <img src="@Url.Content("~/images/logos/pizzashop_logo.png")" alt="Logo" width="70" />
-            </a>
- 
+        <a class="navbar-brand bg-white" id="navbarLogo">
+
+            <img src="@Url.Content("~/images/logos/pizzashop_logo.png")" alt="Logo" width="70" />
+        </a>
+
         <a class="navbar-brand invisible" id="navbarLogo" onclick="myfuncRev()">
 
             <img src="@Url.Content("~/images/logos/pizzashop_logo.png")" alt="Logo" width="70" />
@@ -21,16 +21,26 @@
 
         <div class="btn-group ">
             <div class="kotBtns mt-2 me-2">
-                <a class=" badge btn custom-button p-2" asp-action="KOT" asp-controller="OrderApp"><img src="@Url.Content("~/images/KOT_nevbar/task.png")" alt="Logo" width="18" />
+                <a asp-action="Index" asp-controller="Home" class="btn custom-button rounded-circle shadow-sm me-2">
+                    <img src="@Url.Content("~/images/sidebar_icons/dashboard.png")" alt="dashboard-default" width="22"
+                        class="mb-1 p-0" />
+                </a>
+                <a class=" badge btn custom-button p-2" asp-action="KOT" asp-controller="OrderApp"><img
+                        src="@Url.Content("~/images/KOT_nevbar/task.png")" alt="Logo" width="18" />
                     <span class="">KOT</span></a>
-                 <a class="btn custom-button badge " asp-action="WaitingList" asp-controller="OrderApp"><img src="@Url.Content("~/images/KOT_nevbar/back-in-time.png")" alt="Logo" width="18" />
+                <a class="btn custom-button badge " asp-action="WaitingList" asp-controller="OrderApp"><img
+                        src="@Url.Content("~/images/KOT_nevbar/back-in-time.png")" alt="Logo" width="18" />
                     <span class="">Waiting List</span></a>
-                 <a class="btn custom-button badge activePageInOrderApp" asp-action="TableView" asp-controller="OrderApp"><img src="@Url.Content("~/images/KOT_nevbar/box.png")" alt="Logo" width="18" />
+                <a class="btn custom-button badge activePageInOrderApp" asp-action="TableView"
+                    asp-controller="OrderApp"><img src="@Url.Content("~/images/KOT_nevbar/box.png")" alt="Logo"
+                        width="18" />
                     <span class="">Tables</span></a>
-                 <a class="btn custom-button badge " id="kotBtnAtNavbar"><img src="@Url.Content("~/images/KOT_nevbar/reception-bell.png")" alt="Logo" width="20" />
+                <a class="btn custom-button badge " id="kotBtnAtNavbar"><img
+                        src="@Url.Content("~/images/KOT_nevbar/reception-bell.png")" alt="Logo" width="20" />
                     <span class="">Menu</span></a>
+                
             </div>
-            
+
             <a class="navbar-brand dropdown-toggle text-decoration-none" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <img src="@UserImg" alt="Logo" width="45" height="45" class="bg-light rounded-circle" />

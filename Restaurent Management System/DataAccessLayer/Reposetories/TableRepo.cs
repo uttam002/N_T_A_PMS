@@ -10,37 +10,17 @@ public class TableRepo : ITableRepo
 {
 
     private readonly AppDbContext _appDbContext;
-
-
     public TableRepo(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext;
     }
 
     ResponseResult result = new ResponseResult();
-    public async Task<ResponseResult> AddTableAsync(TableDetails newTable)
+    public async Task<ResponseResult> AddTableAsync(Table newTable)
     {
         try
         {
-            var query = await _appDbContext.Tables.Where(c => c.TableName.ToLower() == newTable.TableName.ToLower()).FirstOrDefaultAsync();
-
-            if (query != null)
-            {
-                result.Message = "Table is already Exist!!!";
-                result.Status = ResponseStatus.Error;
-                return result;
-            }
-
-            Table newRow = new Table();
-            newRow.TableName = newTable.TableName;
-            newRow.SectionId = newTable.SectionId;
-            newRow.Capacity = newTable.Capacity;
-            newRow.Status = newTable.Status;
-            newRow.Createby = 9;
-            newRow.Createat = DateTime.Now;
-            newRow.Iscontinued = true;
-
-            _appDbContext.Tables.Add(newRow);
+            _appDbContext.Tables.Add(newTable);
             await _appDbContext.SaveChangesAsync();
             result.Message = "Table Add successfully";
             result.Status = ResponseStatus.Success;
@@ -52,31 +32,14 @@ public class TableRepo : ITableRepo
         }
         return result;
     }
-    public async Task<ResponseResult> UpdateTableAsync(TableDetails updateTable)
+    public async Task<ResponseResult> UpdateTableAsync(Table updateTable)
     {
         try
         {
-            IQueryable<Table> query = _appDbContext.Tables.Where(c => c.TableId == updateTable.TableId && c.Iscontinued);
-            Table existingTable = await query.FirstOrDefaultAsync();
-            if (existingTable == null)
-            {
-                result.Message = "Table was Not Found";
-                result.Status = ResponseStatus.NotFound;
-            }
-            else
-            {
-                existingTable.TableName = updateTable.TableName;
-                existingTable.SectionId = updateTable.SectionId;
-                existingTable.Capacity = updateTable.Capacity;
-                existingTable.Status = updateTable.Status;
-                existingTable.Modifyby = 1;
-                existingTable.Modifyat = DateTime.Now;
-
-                _appDbContext.Tables.Update(existingTable);
-                await _appDbContext.SaveChangesAsync();
-                result.Message = "Update Tbale successfullly!!!";
-                result.Status = ResponseStatus.Success;
-            }
+            _appDbContext.Tables.Update(updateTable);
+            await _appDbContext.SaveChangesAsync();
+            result.Message = "Update Table successfullly!!!";
+            result.Status = ResponseStatus.Success;
         }
         catch (Exception ex)
         {
@@ -85,7 +48,7 @@ public class TableRepo : ITableRepo
         }
         return result;
     }
-    public async Task<List<TableDetails>> GetTablesBySectionId(int id, PaginationDetails paginationDetails)
+    public async Task<List<Table>> GetTablesBySectionId(int id, PaginationDetails paginationDetails)
     {
         try
         {
@@ -98,59 +61,34 @@ public class TableRepo : ITableRepo
             paginationDetails.totalRecords = await query.CountAsync();
             return await query.Skip((paginationDetails.PageNumber - 1) * paginationDetails.PageSize)
                             .Take(paginationDetails.PageSize)
-                                 .Select(c => new TableDetails
-                                 {
-                                     TableId = c.TableId,
-                                     TableName = c.TableName,
-                                     SectionId = c.SectionId,
-                                     Capacity = c.Capacity,
-                                     Status = c.Status
-                                 }).ToListAsync();
+                                 .ToListAsync();
         }
         catch (Exception ex)
         {
             return null;
         }
     }
-    public async Task<ResponseResult> MassDeleteTablesAsync(List<int> tableIds)
+    public async Task<Table> GetTableAsync(int tableId)
     {
         try
         {
-            foreach (int tableId in tableIds)
+            return await _appDbContext.Tables.Where(t => t.TableId == tableId).FirstOrDefaultAsync();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+    public async Task<ResponseResult> MassUpdateTablesAsync(List<Table> tableList)
+    {
+        try
+        {
+            foreach (Table table in tableList)
             {
-                Table tableDetails = await _appDbContext.Tables.Where(t => t.TableId == tableId).FirstOrDefaultAsync();
-                if (tableDetails != null)
-                {
-                    tableDetails.Iscontinued = false;
-                    _appDbContext.Tables.Update(tableDetails);
-                }
-                else
-                {
-                    result.Message = "Some of selected Tables are not found!!!";
-                    result.Status = ResponseStatus.NotFound;
-                    return result;
-                }
+                _appDbContext.Tables.Update(table);
             }
             await _appDbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            result.Message = ex.Message;
-            result.Status = ResponseStatus.Error;
-        }
-        return result;
-    }
-    public async Task<ResponseResult> DeleteTableAsync(int tableId)
-    {
-        try
-        {
-            Table existingTable = await _appDbContext.Tables.Where(t => t.TableId == tableId).FirstOrDefaultAsync();
-
-            existingTable.Iscontinued = false;
-
-            _appDbContext.Tables.Update(existingTable);
-            await _appDbContext.SaveChangesAsync();
-            result.Message = "Table Delete Successfully !!!";
+            result.Message = "Mass Update Tables Successfully!!!";
             result.Status = ResponseStatus.Success;
         }
         catch (Exception ex)
@@ -160,12 +98,13 @@ public class TableRepo : ITableRepo
         }
         return result;
     }
+    public async Task<List<Table>> GetTableListBySectionIdAsync(int sectionId)
+    {
+        return await _appDbContext.Tables.Where(s => s.SectionId == sectionId).ToListAsync();
+    }
 
-    public async Task<Table> GetTableAsync(int tableId){
-        try{
-            return await _appDbContext.Tables.Where(t=>t.TableId == tableId).FirstOrDefaultAsync();
-        }catch{
-            return null;
-        }
+    public async Task<List<Table>> GetTableListFromTableIdsAsync(int[] tableIds)
+    {
+        return await _appDbContext.Tables.Where(table => tableIds.Contains(table.TableId)).ToListAsync();
     }
 }

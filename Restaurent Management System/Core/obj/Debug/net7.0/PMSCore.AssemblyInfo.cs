@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PMSCore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3343808dfd1a9ad4360dc9b349d13c4a45c91b83")]
 [assembly: System.Reflection.AssemblyProductAttribute("PMSCore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PMSCore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 namespace PMSCore.ViewModel;
 
 public class AreaDetails
@@ -19,9 +20,15 @@ public class TableDetails
 
 public class SectionDetails
 {
-    public int SectionId { get; set; }
+    public int SectionId { get; set; }=0;
+
+    [Required(ErrorMessage = "Section Name is required.")]
+    [StringLength(100, ErrorMessage = "Section Name can't be longer than 100 characters.")]
     public string SectionName { get; set; } = null!;
+
+    [StringLength(500, ErrorMessage = "Description can't be longer than 500 characters.")]
     public string? Description { get; set; }
+
+    // [Range(1, int.MaxValue, ErrorMessage = "Editor ID must be a positive number.")]
     public int editorId { get; set; } = 0;
-    
 }

@@ -8,7 +8,7 @@ var configuration = builder.Configuration;
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddApplicationServices(configuration);
-builder.Services.AddSignalR();
+// builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -29,7 +29,7 @@ app.UseRouting();
 // Enable Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<SiganlRHUB>("/signalrhub");
+// app.MapHub<SiganlRHUB>("/signalrhub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}");

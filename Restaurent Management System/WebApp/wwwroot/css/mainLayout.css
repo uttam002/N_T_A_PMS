@@ -102,7 +102,15 @@ body {
   opacity: 1;
   visibility: visible;
 }
+.hover-scale-transition {
+  gap: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
 
+.hover-scale-transition:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.01);
+}
 .backbtn,
 .cancelbtn {
   border-radius: 10px;
@@ -259,7 +267,7 @@ body {
   overflow-y: auto;
 }
 .section-fixed{
-  height: 510px;
+  height: 460px;
 }
 
 .section-fixed ul li{

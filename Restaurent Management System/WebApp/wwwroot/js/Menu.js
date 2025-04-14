@@ -338,7 +338,7 @@ function openEditModal(itemId) {
         console.log(editModal);
 
         if (editModal.length) {
-          $("#EditItemModal").modal("show");
+          $("#EditItemModal").show();
         }
 
         $("#UpdateCategoryForEdit").val(response.data.categoryId);
@@ -433,18 +433,11 @@ function addModifierGroup(modifier) {
         }
       },
       error: function (xhr, status, error) {
-        toastr.error("Failed to load modifier details. ", "Error", {
-          positionClass: "toast-top-right",
-          timeOut: 3000,
-        });
+        showToaster("Failed to load modifier details. ", "Error");
       },
     });
   } else {
-    // Show a toastr notification if the element already exists
-    toastr.warning("This modifier group already exists!", "Warning", {
-      positionClass: "toast-top-right",
-      timeOut: 3000, // Auto close in 3 seconds
-    });
+    showToaster("This modifier group already exists!", "Warning");
   }
 }
 
@@ -520,14 +513,6 @@ $(document).on("click", "#updateItemBtn", function (event) {
 
 $(document).ready(function () {
 
-  
-  function clearListFromEditItems() {
-    console.log("Helo-----------------------------------")
-   
-    $('#EditItemModal select').each(function () {
-      $(this).prop('selectedIndex', 0);
-    });
-  }
 
   $('#EditItemModal').on('hidden.bs.modal', function () {
     $("#SelectedModifierGroups").children().remove();
@@ -547,9 +532,9 @@ $(document).ready(function () {
             form[0].reset(); // Reset all form fields
 
             // Optional: Reset dropzone preview if needed
-            $('#fileDetails').addClass('d-none');
-            $('#imagePreview').hide();
-            $('#fileInput').val('');
+            $('#fileDetailsAtEditItem').addClass('d-none');
+            $('#imagePreviewAtEditItem').hide();
+            $('#fileInputAtEditItem').val('');
 
             // Clear the hidden IMDetails input field if needed
             $('#IMDetails').val('');
@@ -562,6 +547,8 @@ $(document).ready(function () {
     console.log("Modal closed");
     hideValidationTextForCategoryNameAtAddCategory();
   });
+
+
 });
 
 //#endregion

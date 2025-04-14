@@ -231,41 +231,41 @@ function updateSelectAllState(table) {
 /* ======================== */
 /*         Signal R         */
 /* ======================== */
-// SignalR connection setup
-const connection = new signalR.HubConnectionBuilder()
-  .withUrl("/signalrhub")
-  .build();
+// // SignalR connection setup
+// const connection = new signalR.HubConnectionBuilder()
+//   .withUrl("/signalrhub")
+//   .build();
 
-// Start the SignalR connection
-connection.start()
-  .then(() => {
-    console.log("SignalR connected");
+// // Start the SignalR connection
+// connection.start()
+//   .then(() => {
+//     console.log("SignalR connected");
 
-    // Dynamically join the group when the user is on the "UserPage" section
-    if (window.location.pathname.includes("/User/UserList")) {
-      connection.invoke("JoinGroup", "UserList")
-        .then(() => console.log("Joined group: UserList"))
-        .catch(err => console.error("Error joining group:", err));
-    }
+//     // Dynamically join the group when the user is on the "UserPage" section
+//     if (window.location.pathname.includes("/User/UserList")) {
+//       connection.invoke("JoinGroup", "UserList")
+//         .then(() => console.log("Joined group: UserList"))
+//         .catch(err => console.error("Error joining group:", err));
+//     }
 
-  })
-  .catch(err => console.error("SignalR connection failed:", err));
+//   })
+//   .catch(err => console.error("SignalR connection failed:", err));
 
 
-connection.on("UserDataChanged", (action, userData) => {
-  // Publish a custom event for user data changes
-  const event = new CustomEvent("UserDataChanged", {
-    detail: { action, userData },
-  });
-  document.dispatchEvent(event);
-});
+// connection.on("UserDataChanged", (action, userData) => {
+//   // Publish a custom event for user data changes
+//   const event = new CustomEvent("UserDataChanged", {
+//     detail: { action, userData },
+//   });
+//   document.dispatchEvent(event);
+// });
 
-// Leave the group when navigating away from the section
-window.addEventListener("beforeunload", () => {
-  if (window.location.pathname.includes("/User/UserList")) {
-    connection.invoke("LeaveGroup", "UserList")
-      .then(() => console.log("Left group: UserList"))
-      .catch(err => console.error("Error leaving group:", err));
-  }
+// // Leave the group when navigating away from the section
+// window.addEventListener("beforeunload", () => {
+//   if (window.location.pathname.includes("/User/UserList")) {
+//     connection.invoke("LeaveGroup", "UserList")
+//       .then(() => console.log("Left group: UserList"))
+//       .catch(err => console.error("Error leaving group:", err));
+//   }
 
-});
+// });

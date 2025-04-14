@@ -68,9 +68,6 @@ public class ItemRepo : IItemRepo
         {
             foreach (Item item in items)
             {
-                // Item item = await GetItemById(id);
-                // item.Isactive = false;
-                // item.Modifyat = DateTime.Now;
                 _appDbContext.Items.Update(item);
             }
             await _appDbContext.SaveChangesAsync();
